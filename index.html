@@ -16,9 +16,10 @@
     <script src="libs/tailwindcss.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/index.css">
-    <link rel="stylesheet" href="css/home-orbit.css?v=20261003-16">
+    <link rel="stylesheet" href="css/home-orbit.css?v=20261003-18">
+    <link rel="stylesheet" href="css/ui-theme.css?v=20261003-1">
 </head>
-<body class="page-bg text-white home-page">
+<body class="page-bg text-white home-page jayflix-ui">
     <!-- 将历史记录按钮移到左上角，并缩小尺寸 -->
     <div class="fixed top-4 left-4 z-10 home-tool home-history-tool">
         <button onclick="toggleHistory(event)" class="bg-[#222] hover:bg-[#333] border border-[#333] hover:border-white rounded-lg px-3 py-1.5 transition-colors" aria-label="观看历史">
@@ -273,7 +274,7 @@
                     </div>
                     
                     <!-- 推荐内容 -->
-                    <section id="recommendationOrbit" class="orbit-scene" tabindex="0" aria-label="影视推荐球体，任意方向拖动旋转，卡片始终朝上，双指缩放" aria-describedby="orbitHint">
+                    <section id="recommendationOrbit" class="orbit-scene" tabindex="0" aria-label="影视推荐球体，任意方向拖动旋转，卡片始终朝上，双指缩放">
                         <div class="orbit-scene-meta" aria-hidden="true">
                             <span>CURATED IN ORBIT</span>
                             <span><b id="orbitCount">—</b> 部精选</span>
@@ -291,10 +292,9 @@
                         <div class="orbit-loading" role="status" hidden><span></span>正在载入推荐</div>
                     </section>
                     <div class="orbit-toolbar" id="orbitToolbar" data-collapsed="true">
-                        <button type="button" id="orbitToolbarToggle" class="orbit-gesture-icon orbit-toolbar-toggle" aria-expanded="false" aria-controls="orbitToolbarContent" aria-label="展开球体提示和控制栏" title="展开球体提示和控制栏">→</button>
+                        <button type="button" id="orbitToolbarToggle" class="orbit-gesture-icon orbit-toolbar-toggle" aria-expanded="false" aria-controls="orbitToolbarContent" aria-label="展开球体控制栏" title="展开球体控制栏">→</button>
                         <!-- Put future toolbar functions in this shared disclosure content. -->
                         <div id="orbitToolbarContent" class="orbit-toolbar-content" hidden>
-                            <p id="orbitHint">任意方向拖动 · 卡片始终朝上 · 双指缩放<span class="orbit-desktop-hint"> · Ctrl + 滚轮缩放</span></p>
                             <div class="orbit-control-stack">
                                 <div class="orbit-controls" role="group" aria-label="球体显示控制">
                                     <span class="orbit-control-label">球体</span>
@@ -470,6 +470,6 @@
     <!-- 首页展示交互；不参与搜索、接口或播放器业务。 -->
     <script src="js/home-orbit.js?v=20261003-14"></script>
     <!-- 整栏默认收起；只控制显示，不改变球体参数和旋转状态。 -->
-    <script src="js/home-orbit-toolbar.js?v=20261003-1"></script>
+    <script src="js/home-orbit-toolbar.js?v=20261003-2"></script>
 </body>
 </html>
