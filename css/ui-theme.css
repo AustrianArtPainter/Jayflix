@@ -1,0 +1,274 @@
+@import url("ui-tokens.css");
+
+/* Presentation only. Original grids, breakpoints, visibility, player geometry
+   and sphere transforms are deliberately left to their existing styles. */
+body.jayflix-ui {
+    --primary-color: var(--home-accent);
+    --primary-light: var(--ui-accent-hover);
+    --secondary-color: var(--home-ink);
+    --accent-color: var(--home-accent);
+    --text-color: var(--home-white);
+    --text-muted: var(--home-muted);
+    --border-color: var(--home-line);
+    --page-gradient-start: var(--home-ink);
+    --page-gradient-end: var(--home-ink);
+    --card-gradient-start: var(--ui-dialog);
+    --card-gradient-end: var(--ui-dialog);
+    --card-hover-border: var(--ui-focus);
+    background: var(--home-ink);
+    color: var(--home-white);
+    font-family: var(--ui-font);
+    -webkit-font-smoothing: antialiased;
+    color-scheme: dark;
+}
+
+.jayflix-ui .gradient-text {
+    background: none;
+    color: var(--home-white);
+    -webkit-text-fill-color: currentColor;
+}
+
+/* Reuse the homepage's existing panel and modal surfaces on every page. */
+.jayflix-ui :is(#historyPanel, #settingsPanel) {
+    background: var(--ui-panel);
+    border-color: var(--ui-border);
+    box-shadow: var(--ui-shadow);
+}
+.jayflix-ui #settingsPanel > .space-y-5 > div {
+    border: 1px solid #273c2c;
+    background: var(--ui-inset);
+    box-shadow: none;
+}
+.jayflix-ui :is(#modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, #loading) {
+    background-color: rgba(8, 13, 17, .88);
+}
+.jayflix-ui :is(#modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, #loading) > div {
+    background: var(--ui-dialog);
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-dialog-radius);
+    box-shadow: var(--ui-shadow);
+}
+.jayflix-ui :is(#historyPanel, #settingsPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal) :is(h2, h3, h4) {
+    color: var(--ui-title);
+    -webkit-text-fill-color: currentColor;
+    font-weight: 650;
+}
+
+/* One neutral action style, reused by static and dynamically generated controls.
+   Explicit regions prevent these rules from touching sphere cards/toolbars or
+   Artplayer's internally positioned controls. Existing button sizes survive. */
+.jayflix-ui :where(#historyPanel, #settingsPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, .player-container:not(#playerContainer)) button,
+.jayflix-ui :is(.player-header-fixed #goBack, .about-page header a[class*="bg-"]) {
+    background: var(--ui-control);
+    color: var(--ui-button-text);
+    border-color: var(--ui-control-border);
+    border-radius: var(--ui-button-radius);
+    box-shadow: none;
+    background-image: none;
+}
+.jayflix-ui :where(#historyPanel, #settingsPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, .player-container:not(#playerContainer)) button:hover,
+.jayflix-ui :is(.player-header-fixed #goBack, .about-page header a[class*="bg-"]):hover {
+    background: var(--ui-hover);
+    border-color: var(--ui-focus);
+    color: var(--home-white);
+}
+.jayflix-ui :where(#settingsPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal)
+    :is(button[class~="bg-blue-600"], button[class~="bg-pink-600"], button[type="submit"], label > div[class~="bg-pink-600"]),
+.jayflix-ui.about-page main a[href="https://github.com/AustrianArtPainter/Jayflix"] {
+    background: var(--home-accent);
+    background-image: none;
+    color: var(--ui-accent-ink);
+    border-color: var(--home-accent);
+    border-radius: var(--ui-button-radius);
+    box-shadow: none;
+}
+.jayflix-ui :where(#settingsPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal)
+    :is(button[class~="bg-blue-600"], button[class~="bg-pink-600"], button[type="submit"], label > div[class~="bg-pink-600"]):hover,
+.jayflix-ui.about-page main a[href="https://github.com/AustrianArtPainter/Jayflix"]:hover {
+    background: var(--ui-accent-hover);
+    color: var(--ui-accent-ink);
+}
+.jayflix-ui #passwordCancelBtn,
+.jayflix-ui #passwordCancelBtn:hover {
+    background: var(--ui-control);
+    color: var(--ui-button-text);
+}
+.jayflix-ui :is(.close-btn, #closeTagModal, #closeBoxModal, #closeUrlModal, #modal > div > div > button) {
+    background: transparent;
+    color: var(--home-muted);
+    border-color: var(--home-line);
+}
+.jayflix-ui :is(#historyPanel, #settingsPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, .player-container)
+    :is(button, input, a):focus-visible,
+.jayflix-ui.about-page a:focus-visible,
+.jayflix-ui.watch-page a:focus-visible {
+    outline: 2px solid var(--ui-focus);
+    outline-offset: 3px;
+}
+.jayflix-ui :is(#modal, #episodesList) .episode-btn {
+    background: var(--ui-control) !important;
+    color: var(--ui-button-text);
+    border-color: var(--ui-control-border) !important;
+}
+.jayflix-ui :is(#modal, #episodesList) .episode-btn:hover {
+    background: var(--ui-hover) !important;
+    border-color: var(--ui-focus) !important;
+}
+.jayflix-ui #episodesList .episode-active,
+.jayflix-ui #episodesList .episode-active:hover {
+    background: var(--home-accent) !important;
+    color: var(--ui-accent-ink);
+    border-color: var(--home-accent) !important;
+}
+.jayflix-ui .player-container button:disabled {
+    background: var(--ui-input);
+    color: var(--home-muted);
+    border-color: var(--home-line);
+}
+
+/* Inputs and inset cards use the same surface/border as the home search bar. */
+.jayflix-ui :is(#settingsPanel, #passwordModal, #tagManageModal, #importUrlModal) input:not([type="checkbox"]) {
+    background: var(--ui-input);
+    color: var(--home-white);
+    border-color: var(--ui-input-border);
+}
+.jayflix-ui :is(#settingsPanel, #passwordModal, #tagManageModal, #importUrlModal) input::placeholder { color: var(--home-muted); }
+.jayflix-ui :is(#settingsPanel, #passwordModal, #tagManageModal, #importUrlModal) input:focus { border-color: var(--ui-focus); }
+.jayflix-ui :where(#settingsPanel, #historyPanel, #tagsGrid, #modal, .about-page main)
+    :is([class~="bg-[#111]"], [class~="bg-[#191919]"], [class~="bg-[#1a1a1a]"], [class~="bg-[#222]"], [class~="bg-gray-800"]) {
+    background: var(--ui-input);
+    border-color: var(--home-line);
+}
+.jayflix-ui #customApisList .api-item,
+.jayflix-ui #modal .modal-detail-info {
+    background: var(--ui-input);
+    border-color: var(--ui-input-border);
+}
+.jayflix-ui #customApisList .api-item:hover { background: var(--ui-hover); }
+.jayflix-ui #modal .detail-desc { border-color: var(--home-line); }
+.jayflix-ui #modal .detail-label { color: var(--home-muted); }
+.jayflix-ui #modal .detail-value { color: var(--home-white); }
+.jayflix-ui #modal .detail-desc-content { color: var(--ui-title); }
+.jayflix-ui #dropZone { background: var(--ui-input); border-color: var(--ui-input-border); }
+.jayflix-ui #dropZone[class~="border-blue-500"] { border-color: var(--home-accent); }
+.jayflix-ui #dropZone svg path { fill: var(--home-accent); }
+.jayflix-ui :where(#settingsPanel, #historyPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, #resultsArea, .player-container, .about-page main)
+    :is(.text-gray-400, .text-gray-500, .detail-label, .api-group-title, .history-time, .history-meta) { color: var(--home-muted); }
+.jayflix-ui :where(#settingsPanel, #historyPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, #resultsArea, .player-container, .about-page main)
+    :is(.text-gray-200, .text-gray-300) { color: var(--ui-title); }
+.jayflix-ui :where(#settingsPanel, #historyPanel, #modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, .about-page main)
+    :is(.border-gray-700, [class~="border-[#333]"], [class~="border-[#222]"]) { border-color: var(--home-line); }
+.jayflix-ui :is(#settingsPanel, #historyPanel, #modal) :is(.text-blue-400, .text-pink-500, .history-title) { color: var(--home-accent); }
+.jayflix-ui .history-item { background: var(--ui-input); border-color: var(--home-line); }
+.jayflix-ui .history-item:hover { border-color: var(--ui-focus); }
+.jayflix-ui :is(.history-episode, .history-source) { color: var(--home-accent); }
+.jayflix-ui .history-separator { color: var(--home-muted); }
+.jayflix-ui #settingsPanel :is(.custom-api-edit, .text-blue-500) { color: var(--home-accent); }
+.jayflix-ui #resultsArea :is([class~="bg-blue-500"], [class~="bg-purple-500"], [class~="bg-[#222]"]) {
+    background: var(--ui-control);
+    color: var(--ui-button-text);
+}
+.jayflix-ui #resultsArea .border-gray-800 { border-color: var(--home-line); }
+.jayflix-ui .home-discover .text-pink-500 { color: var(--home-accent); }
+.jayflix-ui .home-discover .animate-spin { border-color: var(--home-accent); border-top-color: transparent; }
+.jayflix-ui .home-discover .text-red-400 { color: var(--ui-danger); }
+.jayflix-ui :is(#settingsPanel, #historyPanel) :is(.text-green-400, .text-green-500) { color: var(--home-accent); }
+.jayflix-ui #historyPanel .text-yellow-400 { color: var(--ui-warning); }
+.jayflix-ui .history-progress .progress-bar { background: var(--ui-control); }
+.jayflix-ui .history-progress .progress-filled { background: var(--home-accent); }
+.jayflix-ui .history-progress .progress-text { color: var(--home-muted); }
+.jayflix-ui :is(#settingsPanel, #historyPanel, #modal, #passwordModal, #tagManageModal, #messageBoxModal)
+    :is(.text-red-400, .text-red-500, .text-pink-400, .adult-warning, .adult-tag, .api-adult + label, .api-group-title.adult) { color: var(--ui-danger) !important; }
+.jayflix-ui #messageBoxModal h3.text-red-500 { -webkit-text-fill-color: var(--ui-danger); }
+.jayflix-ui #settingsPanel .filter-description strong { color: var(--ui-warning); }
+.jayflix-ui #settingsPanel .form-checkbox { background: var(--ui-input); border-color: var(--ui-input-border); }
+.jayflix-ui #settingsPanel .form-checkbox:checked { background: var(--home-accent); border-color: var(--home-accent); }
+.jayflix-ui #settingsPanel .form-checkbox:checked::after { border-color: var(--ui-accent-ink); }
+.jayflix-ui #settingsPanel .toggle-bg,
+.jayflix-ui .slider { background: var(--ui-control-border); }
+.jayflix-ui #settingsPanel input:checked + .toggle-bg,
+.jayflix-ui input:checked + .slider { background: var(--home-accent); }
+.jayflix-ui #settingsPanel input:is(:focus-visible, :hover) + .toggle-bg { box-shadow: 0 0 0 2px #a2e2ce30; }
+.jayflix-ui #settingsPanel .toggle-dot,
+.jayflix-ui .slider::before { background: var(--home-white); box-shadow: none; }
+
+/* Page headers and footer retain their existing responsive arrangements. */
+.jayflix-ui.player-page .player-header-fixed,
+.jayflix-ui.about-page > header { background: var(--home-ink); border-color: var(--home-line); }
+.jayflix-ui :is(.player-header-fixed .logo-icon, .about-page header a > svg, .redirect-container .logo-icon) { color: var(--home-accent); }
+.jayflix-ui .footer { background: transparent; border-color: var(--home-line); }
+.jayflix-ui .footer p { color: var(--ui-footer-text); font-size: 11px; }
+.jayflix-ui .footer :is(.gradient-text, svg) { color: var(--ui-footer-brand); -webkit-text-fill-color: currentColor; }
+.jayflix-ui .footer a { color: var(--ui-footer-link); font-size: 11px; }
+.jayflix-ui .footer a:hover { color: var(--home-accent); }
+
+/* Player skin only: no changes to fixed positioning, fullscreen, video fitting,
+   touch handling, control-lock visibility or the third-party player library. */
+.jayflix-ui #resourceInfoBarContainer { background: var(--ui-dialog); border: 1px solid var(--ui-border); box-shadow: none; }
+.jayflix-ui :is(.resource-info-bar-left, #videoTitle) { color: var(--home-white); font-weight: 650; }
+.jayflix-ui .resource-info-bar-videos { color: var(--home-muted); }
+.jayflix-ui :is(.resource-switch-btn, .resource-switch-icon) { color: var(--home-accent); }
+.jayflix-ui .resource-switch-icon path { stroke: currentColor; }
+.jayflix-ui :is(.player-loading-overlay, .loading-container, .error-container) { background: rgba(8, 13, 17, .9) !important; }
+.jayflix-ui .player-loading-spinner { border-color: #a2e2ce25 !important; border-top-color: var(--home-accent) !important; }
+.jayflix-ui :is(.player-loading-text, .player-loading-overlay div:nth-child(2)) { color: var(--home-white) !important; }
+.jayflix-ui :is(.loading-spinner, #loading .animate-spin) { border-color: #a2e2ce25; border-top-color: var(--home-accent); }
+.jayflix-ui .error-message-sub { color: var(--home-muted); }
+.jayflix-ui :is(.position-restore-hint, .shortcut-hint) { background: var(--ui-dialog); color: var(--ui-title); border: 1px solid var(--ui-border); border-radius: var(--ui-button-radius); }
+.jayflix-ui .art-video-player {
+    --art-theme: var(--home-accent) !important;
+    --art-font-family: var(--ui-font);
+    --art-progress-color: #a2e2ce25;
+    --art-loaded-color: #a2e2ce40;
+    --art-hover-color: #a2e2ce20;
+    --art-widget-background: var(--ui-dialog);
+    --art-tip-background: var(--ui-dialog);
+    --art-border-radius: var(--ui-button-radius);
+}
+.jayflix-ui .art-video-player :is(.art-settings, .art-selector-list, .art-contextmenus, .art-volume-inner, .art-info, .art-notice-inner) {
+    background: var(--ui-dialog);
+    color: var(--home-white);
+    border-color: var(--ui-border);
+    border-radius: var(--ui-button-radius);
+}
+.jayflix-ui .art-video-player.art-backdrop :is(.art-settings, .art-selector-list, .art-contextmenus, .art-volume-inner, .art-info, .art-layer-auto-playback) {
+    background: var(--ui-dialog) !important;
+    backdrop-filter: none;
+}
+.jayflix-ui .art-video-player :is(.art-setting-item, .art-selector-item, .art-contextmenu):hover { background: var(--ui-hover); }
+.jayflix-ui #modal .speed-badge { background: var(--ui-input); border-radius: 5px; }
+.jayflix-ui #modal .speed-indicator { font-size: 10px; color: var(--home-accent); }
+.jayflix-ui #modal .speed-indicator:is(.poor, .error) { color: var(--ui-danger); }
+.jayflix-ui #modal .speed-indicator.medium { color: var(--ui-warning); }
+.jayflix-ui #modal [class~="bg-blue-600"] { background: var(--home-accent); color: var(--ui-accent-ink); }
+
+/* About content reuses the same nested surfaces, not a new theme. */
+.jayflix-ui.about-page main :is([class*="bg-gradient-"]:not(a), [class~="bg-[#1a1a1a]"]) {
+    background: var(--ui-dialog);
+    border-color: var(--ui-border);
+    box-shadow: none;
+}
+.jayflix-ui.about-page main :is(h2, h3) { color: var(--ui-title); background: none; -webkit-text-fill-color: currentColor; font-weight: 650; }
+.jayflix-ui.about-page main :is(.text-blue-400, .bg-blue-400, .bg-green-400) { color: var(--home-accent); }
+.jayflix-ui.about-page main :is(.bg-blue-400, .bg-green-400) { background: var(--home-accent); }
+.jayflix-ui.about-page main .bg-yellow-500 { background: #4b4030; color: var(--ui-warning); }
+.jayflix-ui.about-page main .bg-red-500 { background: #4b3033; color: var(--ui-danger); }
+.jayflix-ui.about-page main img[alt="JAYFLIX Logo"] { filter: grayscale(1); }
+.jayflix-ui.about-page main .h-px { background: var(--home-line); }
+
+/* Redirect page keeps its original centered layout and mobile media queries. */
+.jayflix-ui.watch-page .redirect-container { background: var(--ui-dialog); border-color: var(--ui-border); border-radius: var(--ui-dialog-radius); box-shadow: var(--ui-shadow); backdrop-filter: none; -webkit-backdrop-filter: none; }
+.jayflix-ui.watch-page .logo-text { background: none; color: var(--home-white); -webkit-text-fill-color: currentColor; }
+.jayflix-ui.watch-page .loading-animation { border-color: #a2e2ce25; border-top-color: var(--home-accent); }
+.jayflix-ui.watch-page :is(#redirect-status, .redirect-hint) { color: var(--home-muted); }
+.jayflix-ui.watch-page #manual-redirect { background: var(--ui-control); color: var(--home-accent); border-radius: var(--ui-button-radius); }
+.jayflix-ui.watch-page #manual-redirect:hover { background: var(--ui-hover); }
+
+/* Shared notifications keep their status semantics without neon fills. */
+.jayflix-ui #toast { background: var(--ui-dialog); border: 1px solid var(--ui-border); color: var(--ui-title); border-radius: var(--ui-button-radius); box-shadow: 0 12px 30px #0006; }
+.jayflix-ui #toast.bg-red-500 { color: var(--ui-danger); border-color: #704a4a; }
+.jayflix-ui #toast.bg-yellow-500 { color: var(--ui-warning); border-color: #6c5d42; }
+.jayflix-ui #toast:is(.bg-green-500, .bg-blue-500) { color: var(--home-accent); }
+.jayflix-ui :is(#settingsPanel, #historyPanel, #modalContent, #tagsGrid, .about-page main) * { scrollbar-color: var(--ui-control-border) var(--ui-input); }
+.jayflix-ui :is(#settingsPanel, #historyPanel, #modalContent)::-webkit-scrollbar-thumb { background: var(--ui-control-border); }
+.jayflix-ui :is(#settingsPanel, #historyPanel, #modalContent)::-webkit-scrollbar-track { background: var(--ui-input); }

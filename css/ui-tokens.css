@@ -1,0 +1,32 @@
+/* The approved homepage palette is the single source for production UI. */
+:root {
+    --home-ink: #080d11;
+    --home-surface: #10181d;
+    --home-line: rgba(210, 229, 223, .12);
+    --home-muted: #82938f;
+    --home-accent: #a2e2ce;
+    --home-white: #edf2ee;
+    --ui-font: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    --ui-panel: #0e1812;
+    --ui-dialog: #111e16;
+    --ui-inset: #142019;
+    --ui-input: #101718;
+    --ui-control: #17241e;
+    --ui-hover: #21362b;
+    --ui-border: #385240;
+    --ui-control-border: #365044;
+    --ui-input-border: #2b3a36;
+    --ui-focus: #789e91;
+    --ui-title: #d4e9d9;
+    --ui-button-text: #b7d5c5;
+    --ui-accent-ink: #0b2118;
+    --ui-accent-hover: #c0efde;
+    --ui-footer-text: #657b6c;
+    --ui-footer-brand: #9fbda8;
+    --ui-footer-link: #a0b9a7;
+    --ui-danger: #e7a3a3;
+    --ui-warning: #ddc18f;
+    --ui-shadow: 0 0 70px #0008;
+    --ui-button-radius: 7px;
+    --ui-dialog-radius: 13px;
+}

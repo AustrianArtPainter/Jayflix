@@ -10,9 +10,9 @@
         function setExpanded(expanded) {
             toolbar.dataset.collapsed = String(!expanded);
             content.hidden = !expanded;
-            toggle.textContent = expanded ? '↗' : '→';
+            toggle.textContent = expanded ? '↘' : '→';
             toggle.setAttribute('aria-expanded', String(expanded));
-            const label = expanded ? '收起球体提示和控制栏' : '展开球体提示和控制栏';
+            const label = expanded ? '收起球体控制栏' : '展开球体控制栏';
             toggle.setAttribute('aria-label', label);
             toggle.setAttribute('title', label);
         }

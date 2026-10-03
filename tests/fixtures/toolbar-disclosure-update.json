@@ -1,0 +1,9 @@
+{
+  "baseRevision": "75d0364",
+  "change": "Expanded arrow points down-right; remove the visible gesture hint and retain right-aligned controls.",
+  "hashes": {
+    "css/home-orbit.css": "06514c705fa21234b5c27fe9bcdfc9b01090959609431d95b92182b2d5b60c72",
+    "index.html": "9161da469e0299770b1dde0b4511eeaaacda479f66a97458b602bee634cabd4a",
+    "js/home-orbit-toolbar.js": "eaea153e352bcf0685d1ad08983bcc904d2be58b823a4a74928efa841c51522b"
+  }
+}

@@ -10,7 +10,7 @@ const controllerSource = read('js/home-orbit.js');
 
 function createToolbarHarness({ readyState = 'complete', home = true, diagnostic = false,
     missing = '', viewportWidth = 1440, reducedMotion = false, count = 16 } = {}) {
-    let toolbar, toggle, content, hint;
+    let toolbar, toggle, content;
     const h = createOrbitHarness({ viewportWidth, reducedMotion, count,
         source: controllerSource + '\n' + disclosureSource,
         setupDocument({ document }) {
@@ -34,22 +34,20 @@ function createToolbarHarness({ readyState = 'complete', home = true, diagnostic
             toggle.textContent = '→';
             content = create(toolbar, 'div', 'orbitToolbarContent', 'orbit-toolbar-content');
             content.hidden = true;
-            hint = create(content, 'p', 'orbitHint');
-            hint.textContent = '任意方向拖动 · 卡片始终朝上 · 双指缩放 · Ctrl + 滚轮缩放';
             content.appendChild(document.querySelector('.orbit-control-stack'));
             const originalGet = document.getElementById;
             document.getElementById = id => id === missing ? null : ids.get(id) || originalGet(id);
         }
     });
-    return Object.assign(h, { toolbar, toggle, content, hint });
+    return Object.assign(h, { toolbar, toggle, content });
 }
 
 function assertExpanded(h, expanded) {
     assert.equal(h.content.hidden, !expanded);
     assert.equal(h.toolbar.dataset.collapsed, String(!expanded));
-    assert.equal(h.toggle.textContent, expanded ? '↗' : '→');
+    assert.equal(h.toggle.textContent, expanded ? '↘' : '→');
     assert.equal(h.toggle.getAttribute('aria-expanded'), String(expanded));
-    const label = expanded ? '收起球体提示和控制栏' : '展开球体提示和控制栏';
+    const label = expanded ? '收起球体控制栏' : '展开球体控制栏';
     assert.equal(h.toggle.getAttribute('aria-label'), label);
     assert.equal(h.toggle.getAttribute('title'), label);
 }
@@ -76,14 +74,13 @@ test('The toolbar starts collapsed on every load, including before DOMContentLoa
     }
 });
 
-test('Arrow clicks toggle the complete existing toolbar without replacing text or control nodes', () => {
-    const h = createToolbarHarness(), original = nodes(h.content), copy = h.hint.textContent;
+test('Arrow clicks alternate right and down-right without replacing control nodes', () => {
+    const h = createToolbarHarness(), original = nodes(h.content);
     for (let iteration = 0; iteration < 50; iteration++) {
         const event = h.toggle.click();
         assertExpanded(h, iteration % 2 === 0);
         assert.equal(event.defaultPrevented, false);
         assert.deepEqual(nodes(h.content), original);
-        assert.equal(h.hint.textContent, copy);
         assert.equal(h.controls.parentElement, h.content);
     }
 });
@@ -184,13 +181,16 @@ test('HTML/CSS provide default hiding, accessible native-button semantics, compa
     const html = read('index.html'), css = read('css/home-orbit.css');
     assert.match(html, /<div class="orbit-toolbar" id="orbitToolbar" data-collapsed="true">/);
     assert.match(html, /<button type="button" id="orbitToolbarToggle"[^>]*aria-expanded="false" aria-controls="orbitToolbarContent"[^>]*>→<\/button>/);
-    assert.match(html, /<div id="orbitToolbarContent" class="orbit-toolbar-content" hidden>\s*<p id="orbitHint">/);
+    assert.match(html, /<div id="orbitToolbarContent" class="orbit-toolbar-content" hidden>\s*<div class="orbit-control-stack">/);
+    assert.doesNotMatch(html, /orbitHint|orbit-desktop-hint|任意方向拖动 · 卡片始终朝上 · 双指缩放/);
+    assert.doesNotMatch(disclosureSource, /↗|提示和控制栏/);
+    assert.match(css, /\.home-page #orbitToolbarContent \{ justify-content: flex-end; \}/);
     assert.match(css, /\.orbit-toolbar-content\[hidden\] \{ display: none; \}/);
     assert.match(css, /\.orbit-toolbar-toggle:focus-visible \{ outline: 1px solid var\(--home-accent\); outline-offset: 1px; \}/);
     assert.match(css, /@media \(max-width: 600px\)[\s\S]*\.orbit-toolbar-content \{ gap: 8px; flex-wrap: wrap; \}/);
     assert.match(css, /\.orbit-toolbar-toggle \{[^}]*width: 28px; height: 28px/);
     assert.doesNotMatch(css, /#orbitToolbar[^{}]*\{[^}]*height:/);
     assert.doesNotMatch(disclosureSource, /addEventListener\('keydown'/);
-    assert.match(html, /js\/home-orbit-toolbar\.js\?v=20261003-1/);
+    assert.match(html, /js\/home-orbit-toolbar\.js\?v=20261003-2/);
     assert.doesNotMatch(read('orbit-test.html'), /orbitToolbar|home-orbit-toolbar\.js/);
 });

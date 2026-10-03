@@ -4,19 +4,23 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import { existsSync, readFileSync } from 'node:fs';
 import { createHash } from 'node:crypto';
+import { withoutThemeHooks } from './helpers/ui-presentation-contract.mjs';
 
 const root = new URL('../', import.meta.url);
 const read = file => readFileSync(new URL(file, root), 'utf8');
 const release = JSON.parse(read('tests/fixtures/release-75d0364.json'));
+const toolbarUpdate = JSON.parse(read('tests/fixtures/toolbar-disclosure-update.json'));
 
-test('All approved release 75d0364 runtime files remain byte-for-byte unchanged', () => {
+test('Approved release retains the toolbar update and only the explicitly requested shared-theme hooks', () => {
     assert.equal(release.revision, '75d0364');
+    assert.equal(toolbarUpdate.baseRevision, release.revision);
+    assert.deepEqual(Object.keys(toolbarUpdate.hashes).sort(), ['css/home-orbit.css', 'index.html', 'js/home-orbit-toolbar.js']);
     const files = Object.keys(release.hashes);
     for (const required of ['AGENTS.md', 'index.html', 'css/home-orbit.css', 'js/home-orbit.js',
         'orbit-test.html', 'js/home-orbit-toolbar.js']) assert.ok(files.includes(required));
     for (const file of files) {
-        const hash = createHash('sha256').update(readFileSync(new URL(file, root))).digest('hex');
-        assert.equal(hash, release.hashes[file], `Unexpected release change: ${file}`);
+        const hash = createHash('sha256').update(withoutThemeHooks(file, read(file))).digest('hex');
+        assert.equal(hash, toolbarUpdate.hashes[file] || release.hashes[file], `Unexpected release change: ${file}`);
     }
     assert.equal(existsSync(new URL('tests/home-orbit-rollback.test.mjs', root)), false,
         'The obsolete selective-rollback test must not enforce the rejected page state');
@@ -38,6 +42,6 @@ test('Desktop and mobile whitespace above and below the search form shrink witho
     assert.match(css, /@media \(max-width: 600px\)[\s\S]*\.home-page #searchArea \{ padding: 16px 0 12px; \}/);
     assert.doesNotMatch(css, /padding: 40px 0 24px|padding: 29px 0 15px/);
     assert.doesNotMatch(html, /home-intro[^>]*(?:hidden|display|height)/);
-    assert.match(html, /css\/home-orbit\.css\?v=20261003-16/);
+    assert.match(html, /css\/home-orbit\.css\?v=20261003-18/);
     assert.match(read('orbit-test.html'), /css\/home-orbit\.css\?v=20261003-16/);
 });

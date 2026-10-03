@@ -327,7 +327,7 @@ test('Test entry keeps normal homepage and all business scripts separate, with c
         assert.match(page, /封面尺寸50%–500%/);
         assert.doesNotMatch(page, /50%–200%|(?:缩放|尺寸|range[^>]*>)(?:5|20)%–500%/);
         assert.match(page, /src="js\/home-orbit\.js\?v=20261003-14"/);
-        assert.match(page, /href="css\/home-orbit\.css\?v=20261003-16"/);
+        assert.match(page, page === normal ? /href="css\/home-orbit\.css\?v=20261003-18"/ : /href="css\/home-orbit\.css\?v=20261003-16"/);
     }
 });
 

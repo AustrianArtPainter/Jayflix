@@ -6,6 +6,7 @@ import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import vm from 'node:vm';
 import { cardBox, billboardBox, boxesOverlap, intersectingPairs, coveringRadius, rotateBox } from './helpers/orbit-geometry.mjs';
+import { withoutThemeHooks } from './helpers/ui-presentation-contract.mjs';
 
 const root = fileURLToPath(new URL('../', import.meta.url));
 const source = readFileSync(path.join(root, 'js/home-orbit.js'), 'utf8');
@@ -308,8 +309,8 @@ test('3D carriers preserve depth and the decorative wireframe no longer represen
     assert.doesNotMatch(source,/zIndex\s*=|(?:card|world|camera)\.style\.opacity\s*=/);
 });
 
-test('All existing interfaces, business scripts, shared styles and other pages are byte-for-byte unchanged', () => {
-    for(const [file,expected] of Object.entries(contract.hashes))assert.equal(createHash('sha256').update(readFileSync(path.join(root,file))).digest('hex'),expected,'Protected file changed: '+file);
+test('All existing interfaces, business scripts, shared styles and page content remain unchanged after stripping theme hooks', () => {
+    for(const [file,expected] of Object.entries(contract.hashes))assert.equal(createHash('sha256').update(withoutThemeHooks(file, readFileSync(path.join(root,file), 'utf8'))).digest('hex'),expected,'Protected file changed: '+file);
 });
 
 test('Every original homepage DOM id, inline action and script dependency is preserved', () => {

@@ -37,7 +37,7 @@ test('Normal homepage sizing is scoped away from diagnostic controls and both en
     assert.doesNotMatch(diagnostic, /id="doubanArea"/);
     assert.match(diagnostic, /<span class="orbit-control-range">50%–500%<\/span>/);
     for (const page of [home, diagnostic]) {
-        assert.match(page, /css\/home-orbit\.css\?v=20261003-16/);
+        assert.match(page, page === home ? /css\/home-orbit\.css\?v=20261003-18/ : /css\/home-orbit\.css\?v=20261003-16/);
         assert.match(page, /js\/home-orbit\.js\?v=20261003-14/);
     }
 });
