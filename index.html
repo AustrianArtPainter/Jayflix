@@ -18,8 +18,38 @@
     <link rel="stylesheet" href="css/index.css">
     <link rel="stylesheet" href="css/home-orbit.css?v=20261003-18">
     <link rel="stylesheet" href="css/ui-theme.css?v=20261003-2">
+    <link rel="stylesheet" href="css/ui-palette.css?v=20261003-1">
+    <script src="js/ui-palette.js?v=20261003-1"></script>
 </head>
 <body class="page-bg text-white home-page jayflix-ui">
+    <!-- Shared palette controls: presentation only. -->
+    <div class="fixed top-4 right-4 z-10 home-tool home-palette-tool">
+        <button type="button" id="paletteToggle" class="bg-[#222] hover:bg-[#333] border border-[#333] hover:border-white rounded-lg px-3 py-1.5 transition-colors" aria-label="色调" aria-expanded="false" aria-controls="palettePanel">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 3a9 9 0 1 0 0 18h1a2 2 0 0 0 1.5-3.3 1.5 1.5 0 0 1 1.1-2.5H17a4 4 0 0 0 4-4c0-4.4-4-8.2-9-8.2z"></path>
+                <circle cx="7.5" cy="10.5" r=".7" stroke-width="2"></circle>
+                <circle cx="10" cy="6.8" r=".7" stroke-width="2"></circle>
+                <circle cx="15" cy="7.4" r=".7" stroke-width="2"></circle>
+            </svg>
+            <span>色调</span>
+        </button>
+    </div>
+    <section id="palettePanel" class="ui-palette-panel" role="dialog" aria-labelledby="paletteTitle" hidden>
+        <div class="ui-palette-heading">
+            <h2 id="paletteTitle">色调</h2>
+            <button type="button" id="paletteClose" class="ui-palette-close" aria-label="关闭色调">
+                <svg fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path></svg>
+            </button>
+        </div>
+        <div class="ui-palette-grid">
+            <label for="palette-background">背景<input type="color" id="palette-background" value="#080d11" aria-label="背景颜色"></label>
+            <label for="palette-module">模块<input type="color" id="palette-module" value="#111e16" aria-label="模块颜色"></label>
+            <label for="palette-accent">强调<input type="color" id="palette-accent" value="#a2e2ce" aria-label="强调颜色，包含进度条"></label>
+            <label for="palette-text">文字<input type="color" id="palette-text" value="#edf2ee" aria-label="文字颜色"></label>
+        </div>
+        <button type="button" id="paletteReset" class="ui-palette-reset">恢复默认</button>
+    </section>
+    <!-- End shared palette controls. -->
     <!-- 将历史记录按钮移到左上角，并缩小尺寸 -->
     <div class="fixed top-4 left-4 z-10 home-tool home-history-tool">
         <button onclick="toggleHistory(event)" class="bg-[#222] hover:bg-[#333] border border-[#333] hover:border-white rounded-lg px-3 py-1.5 transition-colors" aria-label="观看历史">
