@@ -17,6 +17,9 @@ const homeShared = `.home-page #historyPanel, .home-page #settingsPanel { backgr
 
 export function withoutThemeHooks(file, text) {
     if (officialPages.includes(file)) {
+        text = text.replace(/^[\t ]*<link rel="stylesheet" href="css\/ui-palette\.css\?v=20261003-1">\r?\n/m, '')
+            .replace(/^[\t ]*<script src="js\/ui-palette\.js\?v=20261003-1"><\/script>\r?\n/m, '');
+        if (file === 'index.html') text = text.replace(/    <!-- Shared palette controls: presentation only\. -->\n[\s\S]*?    <!-- End shared palette controls\. -->\n/, '');
         text = text.replace(/^[\t ]*<link rel="stylesheet" href="css\/ui-theme\.css\?v=20261003-2">\r?\n/m, '');
         const bodies = {
             'index.html': ['<body class="page-bg text-white home-page jayflix-ui">', '<body class="page-bg text-white home-page">'],
