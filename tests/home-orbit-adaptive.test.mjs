@@ -222,9 +222,9 @@ test('At 1,322 displayed cards, repeated free dragging still paints only once pe
 test('Homepage and diagnostic entry load the fresh shared controller without adding requests, fixtures or business dependencies', () => {
     for (const file of ['index.html', 'orbit-test.html']) {
         const page = readFileSync(new URL(`../${file}`, import.meta.url), 'utf8');
-        assert.match(page, /js\/home-orbit\.js\?v=20261003-14/);
+        assert.match(page, /js\/home-orbit\.js\?v=20261003-15/);
     }
-    assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|localStorage|sessionStorage/);
+    assert.doesNotMatch(source, /\bfetch\s*\(|XMLHttpRequest|sessionStorage/);
     const home = readFileSync(new URL('../index.html', import.meta.url), 'utf8');
     assert.doesNotMatch(home, /orbit-test|data-orbit-test/);
 });

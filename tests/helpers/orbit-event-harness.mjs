@@ -150,7 +150,7 @@ class Element {
 }
 
 export function createOrbitHarness({ count = 16, reducedMotion = false, source, sceneData = {}, cardsFactory,
-    setupDocument, bootstrapSource, query = '', viewportWidth = 1440 } = {}) {
+    setupDocument, bootstrapSource, query = '', viewportWidth = 1440, storage, deferTimers = false } = {}) {
     const document = new Element('document');
     document.readyState = 'complete';
     document.hidden = false;
@@ -237,7 +237,8 @@ export function createOrbitHarness({ count = 16, reducedMotion = false, source, 
         button.addEventListener('click', () => { actionCount++; });
         return card;
     });
-    let now = 1000, nextFrame = 1;
+    let now = 1000, nextFrame = 1, nextTimer = 1;
+    const timers = new Map(), windowEvents = new Element('window');
     const processCapture = values => {
         const id = values.pointerId, old = document.currentCaptures.get(id);
         if (old === document.pendingCaptures.get(id)) return;
@@ -269,22 +270,36 @@ export function createOrbitHarness({ count = 16, reducedMotion = false, source, 
     if (setupDocument) setupDocument({ document, scene, container });
     const context = vm.createContext({
         document, performance: { now: () => now }, matchMedia: query => query === '(max-width: 600px)' ? mobileMedia : media,
+        localStorage: storage, addEventListener: (...args) => windowEvents.addEventListener(...args),
         URLSearchParams, location: { search: query },
         CustomEvent: class { constructor(type, options = {}) { this.type = type; this.detail = options.detail; } },
         requestAnimationFrame: callback => { const id = nextFrame++; frames.set(id, callback); return id; },
         cancelAnimationFrame: id => frames.delete(id),
         MutationObserver: observer('mutation'), ResizeObserver: observer('resize'), IntersectionObserver: observer('intersection'),
-        setTimeout: callback => { callback(); }
+        setTimeout: (callback, delay = 0) => {
+            if (!deferTimers) { callback(); return 0; }
+            const id = nextTimer++;
+            timers.set(id, { callback, due: now + delay });
+            return id;
+        },
+        clearTimeout: id => timers.delete(id)
     });
     if (bootstrapSource) vm.runInContext(bootstrapSource, context, { filename: 'orbit-test.js' });
     vm.runInContext(source ?? readFileSync(new URL('../../js/home-orbit.js', import.meta.url), 'utf8'), context, { filename: 'home-orbit.js' });
     return {
         scene, world, wireframe, camera, container, cards, controls, sphereControls, cardControls, speedControls, actions, zoomValue, cardValue, speedValue,
-        counter, loading, media, mobileMedia, observers, observerStates, document,
+        counter, loading, media, mobileMedia, observers, observerStates, document, windowEvents,
         math: context.JayflixOrbitMath,
         get actionCount() { return actionCount; },
         get linkCount() { return linkCount; },
         get frameCount() { return frames.size; },
+        get timerCount() { return timers.size; },
+        advanceTimers(milliseconds = 150) {
+            now += milliseconds;
+            for (const [id, timer] of timers) if (timer.due <= now) {
+                timers.delete(id); timer.callback();
+            }
+        },
         viewport(width) {
             const before = mobileMedia.matches;
             mobileMedia.matches = width <= 600;

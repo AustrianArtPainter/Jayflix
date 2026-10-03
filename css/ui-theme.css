@@ -22,6 +22,12 @@ body.jayflix-ui {
     color-scheme: dark;
 }
 
+/* The legacy player fixes html/body to one viewport. Overflowing transparent
+   content therefore exposes the root canvas; match it without changing layout. */
+html:has(> body.jayflix-ui.player-page) {
+    background: var(--home-ink);
+}
+
 .jayflix-ui .gradient-text {
     background: none;
     color: var(--home-white);

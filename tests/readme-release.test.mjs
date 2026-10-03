@@ -34,8 +34,13 @@ test('README documents the shared production theme and current toolbar disclosur
     const toolbar = read('js/home-orbit-toolbar.js');
     assert.ok(toolbar.includes('↘'));
     for (const page of ['index.html', 'player.html', 'watch.html', 'about.html']) {
-        assert.match(read(page), /css\/ui-theme\.css\?v=20261003-1/);
+        assert.match(read(page), /css\/ui-theme\.css\?v=20261003-2/);
     }
+});
+
+test('README describes browser-local preferences and reset without changing pause', () => {
+    assert.match(readme, /球体比例、封面比例、转速和暂停状态保存在当前浏览器，刷新后恢复/);
+    assert.match(readme, /重置后的默认比例和转速也会保存，暂停状态不变/);
 });
 
 test('Deployment instructions retain Pages Functions and qualify empty-frame performance results', () => {

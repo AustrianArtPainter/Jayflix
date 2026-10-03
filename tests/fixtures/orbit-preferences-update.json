@@ -1,0 +1,13 @@
+{
+  "baseRevision": "4feb49e",
+  "change": "Persist homepage zoom, cover scale, speed and pause; refresh the shared controller asset URL only on both entries.",
+  "hashes": {
+    "index.html": "6e615b412147578e610392040ef33f0175705b50eb0581405666f348b4062f2a",
+    "js/home-orbit.js": "50194ceb8b526325918af1acff9e2dc06d4e0084a826e0dad14ea14394ec6d4f",
+    "orbit-test.html": "6d4f70ef8a80118aead8c851ddc9a0120e16a19dd4103a94fa32de65ed675d27"
+  },
+  "unchangedSections": {
+    "math": "9b494b224a2400b9e57af4d10d552126e919185b1cc253e35b73e8e0295513e8",
+    "render": "c6f20878b7b3ef7e3588efd816d9c7e07d566cc58a6cf9a9833c38fe99f5f714"
+  }
+}
