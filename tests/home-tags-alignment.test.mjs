@@ -47,5 +47,5 @@ test('Tag scrolling, selection/management behavior and diagnostic layout remain 
     assert.match(css, /\.home-tags-viewport \{[^}]*scrollbar-width: thin;[^}]*border-bottom: 1px solid var\(--home-line\)/);
     assert.doesNotMatch(read('orbit-test.html'), /id="douban-tags"/);
     assert.match(html, /id="orbitToolbar" data-collapsed="true"/);
-    for (const page of [html, read('orbit-test.html')]) assert.match(page, /css\/home-orbit\.css\?v=20261003-16/);
+    for (const page of [html, read('orbit-test.html')]) assert.match(page, page === html ? /css\/home-orbit\.css\?v=20261003-18/ : /css\/home-orbit\.css\?v=20261003-16/);
 });

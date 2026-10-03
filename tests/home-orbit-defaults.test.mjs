@@ -110,6 +110,6 @@ test('Homepage has exactly one named combined reset and two noninteractive perce
     assert.match(read('js/home-orbit.js'), /matchMedia\('\(max-width: 600px\)'\)/);
     for (const page of [html, read('orbit-test.html')]) {
         assert.match(page, /home-orbit\.js\?v=20261003-14/);
-        assert.match(page, /home-orbit\.css\?v=20261003-16/);
+        assert.match(page, page === html ? /home-orbit\.css\?v=20261003-18/ : /home-orbit\.css\?v=20261003-16/);
     }
 });

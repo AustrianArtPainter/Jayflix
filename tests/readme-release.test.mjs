@@ -27,6 +27,17 @@ test('Documented orbit limits agree with unchanged release constants', () => {
     assert.match(readme, /200% \| 70%/);
 });
 
+test('README documents the shared production theme and current toolbar disclosure', () => {
+    assert.match(readme, /首页、播放页、跳转页、关于页及弹窗共用深色与薄荷绿主题/);
+    assert.match(readme, /保留原有桌面和移动端适配/);
+    assert.match(readme, /默认收起（→），展开时为 ↘/);
+    const toolbar = read('js/home-orbit-toolbar.js');
+    assert.ok(toolbar.includes('↘'));
+    for (const page of ['index.html', 'player.html', 'watch.html', 'about.html']) {
+        assert.match(read(page), /css\/ui-theme\.css\?v=20261003-1/);
+    }
+});
+
 test('Deployment instructions retain Pages Functions and qualify empty-frame performance results', () => {
     for (const file of ['functions/_middleware.js', 'functions/image-proxy.js', 'functions/proxy/[[path]].js']) {
         assert.ok(existsSync(new URL(file, root)), file);
