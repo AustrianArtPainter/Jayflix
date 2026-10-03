@@ -337,6 +337,51 @@
             suppressClickUntil: 0, frame: 0, previousTime: 0, dirty: false
         };
 
+        // Homepage preferences are separate from history and diagnostic presets.
+        // Never store orientation/inertia or touch storage from the render loop.
+        const preferencesKey = 'jayflix.orbit.preferences.v1';
+        let preferencesReady = false, preferencesDirty = false, preferencesTimer = 0;
+        let lastSavedPreferences = '';
+        function readPreferences() {
+            if (placeholderTest) return {};
+            try {
+                const saved = JSON.parse(global.localStorage.getItem(preferencesKey));
+                if (!saved || saved.version !== 1 || Array.isArray(saved)) return {};
+                const valid = {};
+                for (const [name, min, max] of [
+                    ['zoom', MIN_ZOOM, MAX_ZOOM], ['cardScale', MIN_CARD_SCALE, MAX_CARD_SCALE],
+                    ['speedPercent', MIN_SPEED_PERCENT, MAX_SPEED_PERCENT]
+                ]) {
+                    if (Number.isFinite(saved[name]) && saved[name] >= min && saved[name] <= max) valid[name] = saved[name];
+                }
+                if (typeof saved.paused === 'boolean') valid.paused = saved.paused;
+                return valid;
+            } catch (_) { return {}; } // Blocked storage or damaged JSON must not break the UI.
+        }
+
+        function savePreferences() {
+            if (preferencesTimer) global.clearTimeout(preferencesTimer);
+            preferencesTimer = 0;
+            if (!preferencesReady || placeholderTest || !preferencesDirty) return;
+            preferencesDirty = false;
+            const value = JSON.stringify({ version: 1, zoom: state.zoom, cardScale: state.cardScale,
+                speedPercent: state.speedPercent, paused: state.paused });
+            if (value === lastSavedPreferences) return;
+            try {
+                global.localStorage.setItem(preferencesKey, value);
+                lastSavedPreferences = value;
+            } catch (_) { /* Keep controls usable if storage is unavailable/full. */ }
+        }
+
+        function queuePreferencesSave() {
+            if (!preferencesReady || placeholderTest) return;
+            preferencesDirty = true;
+            if (preferencesTimer) global.clearTimeout(preferencesTimer);
+            // Coalesce high-frequency wheel/pinch input, then flush at gesture
+            // end or page exit so an immediate refresh retains the final value.
+            preferencesTimer = global.setTimeout(savePreferences, 150);
+        }
+
         function paint() {
             const orientation = state.cards.length ? state.orientation : [1, 0, 0, 0];
             const matrix = orientationMatrix(orientation);
@@ -436,6 +481,7 @@
             scene.dataset.speedPercent = String(state.speedPercent);
             updateControls();
             schedule();
+            queuePreferencesSave();
         }
 
         function setZoom(zoom) {
@@ -444,6 +490,7 @@
             scene.dataset.zoom = String(state.zoom);
             updateControls();
             if (referenceTest) requestPaint();
+            queuePreferencesSave();
         }
 
         function applySceneScale(updateDimensions = false) {
@@ -471,6 +518,7 @@
             // Animation still updates cached transforms/leaf opacity once per frame.
             applyCardDimensions();
             updateControls();
+            queuePreferencesSave();
         }
 
         function decorateCard(card, index) {
@@ -645,6 +693,7 @@
             if (wasGesture) state.suppressClickUntil = performance.now() + 450;
             state.previousTime = 0;
             schedule();
+            savePreferences();
         }
 
         scene.addEventListener('pointerup', finishPointer);
@@ -701,6 +750,7 @@
                 event.preventDefault();
                 pauseButton.click();
             }
+            savePreferences();
         });
 
         container.addEventListener('focusin', event => {
@@ -735,7 +785,9 @@
                 state.previousTime = 0;
                 updateControls();
                 schedule();
+                queuePreferencesSave();
             }
+            savePreferences();
         });
 
         const cardObserver = new MutationObserver(reconcileCards);
@@ -760,9 +812,11 @@
             schedule();
         }).observe(scene);
         document.addEventListener('visibilitychange', () => {
+            if (document.hidden) savePreferences();
             state.previousTime = 0;
             schedule();
         });
+        global.addEventListener('pagehide', savePreferences);
         reduceMotion.addEventListener('change', event => {
             state.paused = event.matches;
             state.previousTime = 0;
@@ -773,9 +827,14 @@
         mobileLayout?.addEventListener('change', updateControls);
 
         const defaults = homeDefaults();
-        setZoom(capacityTest ? MAX_ZOOM : referenceTest ? 2 : placeholderTest ? 1 : defaults.zoom);
-        setCardScale(capacityTest ? MIN_CARD_SCALE : referenceTest ? 0.5 : placeholderTest ? 1 : defaults.cardScale);
-        setAutoSpeed(DEFAULT_SPEED_PERCENT);
+        const saved = readPreferences();
+        // A saved, explicit pause/resume choice takes precedence over the initial
+        // reduced-motion default. Toolbar disclosure still starts collapsed.
+        if (saved.paused !== undefined) state.paused = saved.paused;
+        setZoom(capacityTest ? MAX_ZOOM : referenceTest ? 2 : placeholderTest ? 1 : saved.zoom ?? defaults.zoom);
+        setCardScale(capacityTest ? MIN_CARD_SCALE : referenceTest ? 0.5 : placeholderTest ? 1 : saved.cardScale ?? defaults.cardScale);
+        setAutoSpeed(saved.speedPercent ?? DEFAULT_SPEED_PERCENT);
+        preferencesReady = true;
         reconcileCards();
     }
 
