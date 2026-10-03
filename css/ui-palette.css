@@ -1,0 +1,118 @@
+/* The new entry reuses .home-tool buttons and the approved panel tokens. */
+.home-palette-tool { right: max(200px, calc((100vw - 1480px) / 2 + 200px)) !important; }
+.home-page .home-topline { padding-right: 280px; }
+.ui-palette-panel {
+    position: absolute;
+    top: 76px;
+    right: max(48px, calc((100vw - 1480px) / 2 + 48px));
+    z-index: 60;
+    width: min(270px, calc(100vw - 36px));
+    box-sizing: border-box;
+    padding: 14px;
+    border: 1px solid var(--ui-border);
+    border-radius: var(--ui-dialog-radius);
+    background: var(--ui-dialog);
+    color: var(--home-white);
+    box-shadow: var(--ui-shadow);
+    font-size: 12px;
+}
+.ui-palette-panel[hidden] { display: none; }
+.ui-palette-heading { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.ui-palette-heading h2 { margin: 0; font-size: 13px; font-weight: 650; color: var(--ui-title); }
+.ui-palette-close { width: 24px; height: 24px; border: 0; border-radius: 4px; background: transparent; color: var(--home-muted); }
+.ui-palette-close svg { width: 16px; height: 16px; margin: auto; }
+.ui-palette-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 16px; }
+.ui-palette-grid label { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--ui-button-text); }
+.ui-palette-grid input[type="color"] { width: 32px; height: 28px; padding: 2px; border: 1px solid var(--ui-control-border); border-radius: 5px; background: var(--ui-control); cursor: pointer; }
+.ui-palette-grid input[type="color"]::-webkit-color-swatch-wrapper { padding: 1px; }
+.ui-palette-grid input[type="color"]::-webkit-color-swatch { border: 0; border-radius: 2px; }
+.ui-palette-grid input[type="color"]::-moz-color-swatch { border: 0; border-radius: 2px; }
+.ui-palette-reset { width: 100%; margin-top: 14px; padding: 7px 10px; border: 1px solid var(--ui-control-border); border-radius: var(--ui-button-radius); background: var(--ui-control); color: var(--ui-button-text); font: inherit; }
+.ui-palette-close:hover, .ui-palette-reset:hover { background: var(--ui-hover); color: var(--home-white); }
+.ui-palette-panel :is(button, input):focus-visible { outline: 2px solid var(--ui-focus); outline-offset: 2px; }
+@media (max-width: 900px) {
+    .home-palette-tool { top: 23px !important; right: 182px !important; }
+    .home-page .home-topline { padding-right: 252px; }
+    .ui-palette-panel { top: 66px; right: 28px; }
+}
+@media (max-width: 600px) {
+    .home-palette-tool { top: 17px !important; right: 110px !important; }
+    .home-page .home-topline { padding-right: 154px; }
+    .ui-palette-panel { top: 59px; right: 18px; }
+}
+@media (max-width: 380px) {
+    .home-page .home-topline h1 { font-size: 18px; }
+    .home-page .home-topline a { gap: 7px; }
+    .home-page .home-topline svg { width: 18px; height: 18px; }
+}
+
+/* Only custom palettes activate these bindings. Defaults and diagnostic pages
+   keep their existing CSS byte-for-byte. No opacity, geometry or video tint. */
+html[data-ui-palette] .home-page::before { background: radial-gradient(ellipse at 50% 68%, var(--palette-glow), transparent 60%); }
+html[data-ui-palette] .home-tool button { color: var(--palette-tool-text); }
+html[data-ui-palette] .home-tool button:hover { background: var(--ui-control); border-color: var(--ui-focus); color: var(--home-white); }
+html[data-ui-palette] .home-search-bar { background: var(--ui-input); border-color: var(--ui-input-border); }
+html[data-ui-palette] .home-search-bar:focus-within { border-color: var(--ui-focus); box-shadow: 0 0 0 3px var(--palette-accent-faint) !important; }
+html[data-ui-palette] .home-search-bar > button:first-child { background: var(--ui-control); color: var(--ui-button-text); border-color: var(--ui-input-border); }
+html[data-ui-palette] .home-search-bar > button:last-child { color: var(--ui-accent-ink); }
+html[data-ui-palette] .home-search-bar > button:last-child:hover { background: var(--ui-accent-hover); }
+html[data-ui-palette] .home-page #searchInput { color: var(--home-white); }
+html[data-ui-palette] .home-page #searchInput::placeholder { color: var(--palette-placeholder); }
+html[data-ui-palette] .home-page #recentSearches { border-color: var(--ui-input-border); background: var(--ui-input); color: var(--home-muted); }
+html[data-ui-palette] .home-page #recentSearches .search-tag { background: var(--ui-control); color: var(--ui-button-text); }
+html[data-ui-palette] .home-section-index { color: var(--home-muted); }
+html[data-ui-palette] .home-discovery-heading > div { background: var(--ui-input); }
+html[data-ui-palette] .home-page #doubanArea button[class~="bg-pink-600"] { color: var(--ui-accent-ink); }
+html[data-ui-palette] .home-page #douban-refresh { border-color: var(--ui-control-border); background: var(--ui-control) !important; color: var(--ui-button-text) !important; }
+html[data-ui-palette] .home-page #douban-refresh:hover { background: var(--ui-hover) !important; }
+html[data-ui-palette] .home-tags-viewport { scrollbar-color: var(--ui-control-border) transparent; }
+html[data-ui-palette] .home-page #douban-tags > button { border-color: var(--ui-input-border); background: var(--ui-input); color: var(--ui-button-text); }
+html[data-ui-palette] .home-page #douban-tags > button:hover { border-color: var(--ui-focus); color: var(--home-white); }
+html[data-ui-palette] .home-page #douban-tags > button[class~="bg-pink-600"] { background: var(--palette-tag-active); border-color: var(--palette-tag-active); color: var(--ui-accent-ink); }
+html[data-ui-palette] .orbit-scene:focus-visible { outline-color: var(--ui-focus); }
+html[data-ui-palette] .orbit-scene::after { background: radial-gradient(ellipse, var(--palette-accent-track) 0%, var(--palette-accent-faint) 38%, transparent 70%); }
+html[data-ui-palette] .orbit-scene-meta { color: var(--palette-subtle-text); }
+html[data-ui-palette] .orbit-scene-meta b { color: var(--ui-title); }
+html[data-ui-palette] .orbit-great-circle { border-color: var(--palette-wire); }
+html[data-ui-palette] .orbit-card-front { border-color: var(--palette-card-border); background: var(--ui-panel); }
+html[data-ui-palette] .orbit-card-front > div:nth-of-type(2) { background: var(--ui-panel); }
+html[data-ui-palette] .orbit-card-front > div:nth-of-type(2) button { color: var(--palette-card-text); }
+html[data-ui-palette] .orbit-card:hover .orbit-card-front,
+html[data-ui-palette] .orbit-card:focus-visible .orbit-card-front { border-color: var(--palette-card-focus); }
+html[data-ui-palette] .orbit-card-number { border-color: var(--home-line); background: var(--palette-number-background); color: var(--palette-number-text); }
+html[data-ui-palette] .orbit-loading { color: var(--ui-button-text); background: var(--ui-inset); border-color: var(--ui-input-border); }
+html[data-ui-palette] .orbit-controls { background: var(--ui-panel); }
+html[data-ui-palette] :is(.orbit-toolbar > p, .orbit-toolbar-content > p, .orbit-control-label) { color: var(--palette-label-text); }
+html[data-ui-palette] .orbit-control-range { color: var(--palette-subtle-text); }
+html[data-ui-palette] .orbit-controls :is(button, .orbit-value) { color: var(--palette-value-text); }
+html[data-ui-palette] :is(.orbit-toolbar-toggle, .orbit-controls button):hover { background: var(--ui-hover); color: var(--home-white); }
+html[data-ui-palette] .home-page #results .card-hover { border-color: var(--ui-input-border); background: var(--ui-dialog); }
+html[data-ui-palette] .home-page #results .card-hover:hover { border-color: var(--ui-focus); }
+html[data-ui-palette] .home-page .footer p { color: var(--ui-footer-text); }
+html[data-ui-palette] .home-page .footer .gradient-text { -webkit-text-fill-color: var(--ui-footer-brand); }
+html[data-ui-palette] .home-page .footer a { color: var(--ui-footer-link); }
+
+/* Shared popups and player tracks include previously literal alpha colours. */
+html[data-ui-palette] .jayflix-ui #settingsPanel > .space-y-5 > div { border-color: var(--ui-input-border); }
+html[data-ui-palette] .jayflix-ui :is(#modal, #passwordModal, #tagManageModal, #showImportBoxModal, #importUrlModal, #messageBoxModal, #loading) { background-color: var(--palette-overlay); }
+html[data-ui-palette] .jayflix-ui #settingsPanel input:is(:focus-visible, :hover) + .toggle-bg { box-shadow: 0 0 0 2px var(--palette-accent-focus); }
+html[data-ui-palette] .jayflix-ui :is(.player-loading-overlay, .loading-container, .error-container) { background: var(--palette-player-overlay) !important; }
+html[data-ui-palette] .jayflix-ui :is(.player-loading-spinner, .loading-spinner, #loading .animate-spin, .loading-animation) { border-color: var(--palette-accent-track) !important; border-top-color: var(--home-accent) !important; }
+html[data-ui-palette] .jayflix-ui .art-video-player {
+    --art-font-color: var(--home-white);
+    --art-progress-color: var(--palette-accent-track);
+    --art-loaded-color: var(--palette-accent-loaded);
+    --art-hover-color: var(--palette-accent-hover);
+    --art-highlight-color: var(--palette-accent-loaded);
+    --art-scrollbar-background: var(--ui-control-border);
+    --art-scrollbar-background-hover: var(--ui-focus);
+}
+html[data-ui-palette] .jayflix-ui .art-progress-played { background: var(--home-accent) !important; }
+html[data-ui-palette] .jayflix-ui .art-progress-loaded { background: var(--palette-accent-loaded) !important; }
+html[data-ui-palette] .jayflix-ui .art-progress-hover { background: var(--palette-accent-hover) !important; }
+html[data-ui-palette] .jayflix-ui .art-progress-indicator { background: var(--home-accent) !important; }
+html[data-ui-palette] .jayflix-ui .history-progress .progress-filled { background: var(--home-accent); }
+html[data-ui-palette] .jayflix-ui .history-progress .progress-bar { background: var(--ui-control); }
+html[data-ui-palette] .jayflix-ui .player-container .text-white { color: var(--home-white); }
+html[data-ui-palette] .jayflix-ui.about-page main .text-white:not(a) { color: var(--home-white); }
+html[data-ui-palette] .jayflix-ui .card-hover :is(h3, .text-white) { color: var(--home-white); }
