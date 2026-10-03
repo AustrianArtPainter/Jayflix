@@ -1,6 +1,6 @@
 // Strip ONLY the approved theme hooks/extraction before comparing original
 // hashes. Any altered content, layout, handler, script or other CSS still fails.
-export const themeLink = '<link rel="stylesheet" href="css/ui-theme.css?v=20261003-1">';
+export const themeLink = '<link rel="stylesheet" href="css/ui-theme.css?v=20261003-2">';
 export const officialPages = ['index.html', 'player.html', 'watch.html', 'about.html'];
 const homeTokens = `    --home-ink: #080d11;
     --home-surface: #10181d;
@@ -17,7 +17,7 @@ const homeShared = `.home-page #historyPanel, .home-page #settingsPanel { backgr
 
 export function withoutThemeHooks(file, text) {
     if (officialPages.includes(file)) {
-        text = text.replace(/^[\t ]*<link rel="stylesheet" href="css\/ui-theme\.css\?v=20261003-1">\r?\n/m, '');
+        text = text.replace(/^[\t ]*<link rel="stylesheet" href="css\/ui-theme\.css\?v=20261003-2">\r?\n/m, '');
         const bodies = {
             'index.html': ['<body class="page-bg text-white home-page jayflix-ui">', '<body class="page-bg text-white home-page">'],
             'player.html': ['<body class="jayflix-ui player-page">', '<body>'],
