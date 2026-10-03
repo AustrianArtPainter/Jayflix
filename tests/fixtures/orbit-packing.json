@@ -1,0 +1,15 @@
+{
+  "source": "https://neilsloane.com/sphdesigns/dim3/des.3.16.5.txt",
+  "description": "Hardin–Sloane 16-point spherical 5-design; complete tangent rectangles with individual roll. Frozen offline solution, not a global optimality certificate.",
+  "halfWidthLimit": 0.293637257057344,
+  "coverage": 0.6318222567775067,
+  "optimizer": {
+    "seed": 352159,
+    "targets": [0.28, 0.29, 0.30, 0.31],
+    "starts": 6,
+    "annealingSteps": 18000,
+    "bisectionSteps": 40,
+    "initialRollsDegrees": [145.01940549351275, 158.42132442165166, 87.5251848436892, 140.7941768830642, 179.76851756684482, 114.19518748763949, 56.94509822875261, 132.12144955527037, 177.3132215309888, 177.56110426504165, 159.56900356337428, 78.14856068696827, 23.469710966572162, 23.138868645764887, 47.8248269110918, 152.5064201978967]
+  },
+  "globalOptimalityProved": false
+}
