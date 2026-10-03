@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="robots" content="noindex">
+    <title>JAYFLIX · 212个封面框测试</title>
+    <link rel="icon" href="image/logo.png">
+    <link rel="stylesheet" href="css/home-orbit.css?v=20261003-16">
+    <link rel="stylesheet" href="css/orbit-test.css?v=20261003-3">
+    <!-- Generate image-free fixtures before initializing the real controller. -->
+    <script src="js/orbit-capacity.js?v=20261003-2" defer></script>
+    <script src="js/orbit-test.js?v=20261003-11" defer></script>
+    <script src="js/home-orbit.js?v=20261003-14" defer></script>
+</head>
+<body class="home-page orbit-test-page">
+    <main class="home-shell orbit-test-shell">
+        <header class="orbit-test-header">
+            <a class="orbit-test-brand" href="/">JAYFLIX</a>
+            <span>SPHERE / CAPACITY LAB</span>
+            <a href="/">返回正常首页 ↗</a>
+        </header>
+        <div class="home-intro orbit-test-intro">
+            <p class="home-eyebrow"><span></span> GEOMETRY TEST · NO IMAGES</p>
+            <h1 id="orbitTestHeading">212 个框，同一个球体<span>。</span></h1>
+            <p>仅测试布局与交互，不请求影视接口，不改变正常首页。</p>
+            <p id="orbitTestVersion" class="orbit-test-version">测试资源加载中…</p>
+        </div>
+        <nav class="orbit-test-modes" aria-label="测试尺寸模式">
+            <a href="orbit-test.html?mode=reference&amp;v=20261003-11" data-orbit-mode="reference">固定参考尺寸 · 212张计算条件</a>
+            <a href="orbit-test.html?mode=current&amp;v=20261003-11" data-orbit-mode="current">当前首页算法 · 自动定尺寸</a>
+            <a href="orbit-test.html?mode=capacity&amp;v=20261003-11" data-orbit-mode="capacity">封面50% · 球体500% · 容量压力测试</a>
+        </nav>
+        <p id="orbitTestModeDescription" class="orbit-test-description"></p>
+        <section id="orbitCapacityPanel" class="orbit-capacity-panel" aria-label="完整容量测试加载控制" hidden>
+            <p id="orbitCapacityWarning">高负载测试：正在核算节点数量，可能占用大量内存并卡顿。只计算几何容量，不保证浏览器流畅。点击生成后加载全部空框，不抽样、不隐藏数量；默认暂停旋转。</p>
+            <div>
+                <button id="orbitCapacityLoad" type="button" disabled>正在核算数量…</button>
+                <button id="orbitCapacityClear" type="button">取消并清空</button>
+            </div>
+            <progress id="orbitCapacityProgress" max="1" value="0" aria-label="空框生成进度"></progress>
+            <p id="orbitCapacityStatus" role="status">等待手动加载。</p>
+        </section>
+        <div class="orbit-test-stats" aria-label="测试数据">
+            <div><span>实际框数</span><strong id="orbitTestCount">—</strong></div>
+            <div><span>透视前卡片尺寸</span><strong id="orbitTestDimensions">—</strong></div>
+            <div><span>最小中心距离 / 包围盒对角线</span><strong id="orbitTestSpacing">—</strong></div>
+            <div><span>保守安全间距判据</span><strong id="orbitTestSafety">计算中</strong></div>
+            <div><span>页面 rAF 回调 / 非GPU帧率</span><strong id="orbitTestCadence">采样中</strong></div>
+        </div>
+        <section id="recommendationOrbit" class="orbit-scene" tabindex="0"
+                 data-orbit-test="212-reference" aria-label="212个空白封面框球体测试"
+                 data-orbit-expected-min="0.5" data-orbit-expected-max="5"
+                 aria-describedby="orbitHint orbitTestModeDescription">
+            <div class="orbit-scene-meta" aria-hidden="true">
+                <span id="orbitTestPointLabel">212 DISTINCT SPHERE POINTS</span>
+                <span><b id="orbitCount">—</b> 个编号框</span>
+            </div>
+            <div class="orbit-camera">
+                <div class="orbit-world">
+                    <div class="orbit-wireframe" aria-hidden="true">
+                        <i class="orbit-great-circle" style="--orbit-circle-transform: rotateY(0deg)"></i>
+                        <i class="orbit-great-circle" style="--orbit-circle-transform: rotateY(90deg)"></i>
+                        <i class="orbit-great-circle" style="--orbit-circle-transform: rotateX(90deg)"></i>
+                    </div>
+                    <div id="douban-results"></div>
+                </div>
+            </div>
+            <div class="orbit-loading" role="status" hidden><span></span>正在生成测试框</div>
+        </section>
+        <div class="orbit-toolbar">
+            <p id="orbitHint"><span class="orbit-gesture-icon" aria-hidden="true">↗</span>任意方向拖动 · 文字朝上 · 双指缩放 · Ctrl + 滚轮</p>
+            <div class="orbit-control-stack">
+                <div class="orbit-controls" role="group" aria-label="测试球体控制">
+                    <span class="orbit-control-label">球体</span>
+                    <button type="button" data-orbit-action="zoom-out" aria-label="缩小球体10%">−</button>
+                    <button type="button" data-orbit-action="reset" id="orbitZoom" title="球体缩放50%–500%，点击重置至100%">200%</button>
+                    <button type="button" data-orbit-action="zoom-in" aria-label="放大球体10%">+</button>
+                    <span class="orbit-control-divider" aria-hidden="true"></span>
+                    <button type="button" data-orbit-action="pause" id="orbitPause" aria-label="暂停自动旋转" aria-pressed="false"><span class="orbit-pause-icon" aria-hidden="true"></span><span class="orbit-pause-label">暂停</span></button>
+                </div>
+                <div class="orbit-controls orbit-card-controls" role="group" aria-label="测试封面尺寸控制">
+                    <span class="orbit-control-label">封面</span>
+                    <button type="button" data-orbit-action="card-size-out" aria-label="缩小封面10%">−</button>
+                    <button type="button" data-orbit-action="card-size-reset" id="orbitCardScale" title="封面尺寸50%–500%，点击重置至100%">50%</button>
+                    <button type="button" data-orbit-action="card-size-in" aria-label="放大封面10%">+</button>
+                    <span class="orbit-control-range">50%–500%</span>
+                </div>
+            </div>
+        </div>
+        <aside class="orbit-test-notes">
+            <p>正常前后遮挡不等于面片相交。放大后的球体可能被视窗裁切；实际数量见计数器，可旋转查看。容量模式改变比例后不自动改变总数，间距可能不再通过。</p>
+            <p>空框测试不能证明212张真实图片也流畅。rAF采样仅反映页面回调节奏，不是GPU实际出帧率。</p>
+        </aside>
+        <noscript>请启用JavaScript以生成212个测试框。</noscript>
+    </main>
+</body>
+</html>

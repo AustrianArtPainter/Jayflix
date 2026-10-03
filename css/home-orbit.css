@@ -1,0 +1,364 @@
+/* Homepage-only presentation. Shared pages and business styles stay independent. */
+.home-page {
+    --home-ink: #080d11;
+    --home-surface: #10181d;
+    --home-line: rgba(210, 229, 223, .12);
+    --home-muted: #82938f;
+    --home-accent: #a2e2ce;
+    --home-white: #edf2ee;
+    background: var(--home-ink);
+    color: var(--home-white);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    -webkit-font-smoothing: antialiased;
+}
+
+.home-page::before {
+    content: "";
+    position: absolute;
+    inset: 100px 0 auto;
+    height: 900px;
+    background: radial-gradient(ellipse at 50% 68%, rgba(42, 83, 76, .12), transparent 60%);
+    pointer-events: none;
+}
+
+.home-shell {
+    position: relative;
+    width: min(100%, 1480px);
+    max-width: 1480px !important;
+    height: auto !important;
+    min-height: calc(100svh - 160px);
+    padding: 28px 48px 0 !important;
+}
+
+.home-topline {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: 50px;
+    padding: 0 204px 22px 0;
+    margin: 0 !important;
+    border-bottom: 1px solid var(--home-line);
+}
+
+.home-topline > div { margin: 0; }
+.home-topline a { gap: 10px; }
+.home-topline svg { width: 25px; height: 25px; margin: 0; color: var(--home-accent); }
+.home-topline h1 { font-size: 25px; font-weight: 750; letter-spacing: -.8px; }
+.home-topline .gradient-text { background: none; -webkit-text-fill-color: var(--home-white); color: var(--home-white); }
+.home-topline > p { margin: 0; color: var(--home-muted); font-size: 12px; letter-spacing: .15px; }
+
+.home-tool { position: absolute !important; top: 30px !important; z-index: 30; }
+.home-history-tool { left: auto !important; right: max(124px, calc((100vw - 1480px) / 2 + 124px)) !important; }
+.home-settings-tool { right: max(48px, calc((100vw - 1480px) / 2 + 48px)) !important; }
+.home-tool button {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    height: 34px;
+    padding: 0 10px;
+    background: transparent;
+    color: #bac7c2;
+    border: 1px solid var(--home-line);
+    border-radius: 7px;
+    font-size: 12px;
+}
+.home-tool button:hover { background: #16211f; border-color: #66857a; color: white; }
+.home-tool svg { width: 16px; height: 16px; }
+
+.home-page #searchArea { flex: none; padding: 20px 0 16px; }
+.home-intro { text-align: center; margin-bottom: 23px; }
+.home-eyebrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 8px;
+    color: var(--home-accent);
+    font: 10px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace;
+    letter-spacing: 2.8px;
+    margin-bottom: 13px;
+}
+.home-eyebrow > span { width: 5px; height: 5px; border-radius: 50%; background: var(--home-accent); }
+.home-intro h2 { font-size: clamp(28px, 3.25vw, 46px); font-weight: 650; line-height: 1.3; letter-spacing: -.8px; }
+.home-intro h2 > span { color: var(--home-accent); }
+.home-intro-caption { margin-top: 10px; color: var(--home-muted); font-size: 13px; letter-spacing: 1px; }
+.home-page #searchArea > .max-w-2xl { max-width: 650px; }
+.home-search-bar { height: 52px !important; border: 1px solid #2b3a36; border-radius: 9px !important; box-shadow: 0 12px 30px #0002 !important; background: #101718; }
+.home-search-bar:focus-within { border-color: #789e91; box-shadow: 0 0 0 3px #a2e2ce0a !important; }
+.home-search-bar > button:first-child { width: 76px; background: #131e1c; color: #a5b9b0; border-right: 1px solid #2b3a36; font-size: 12px; }
+.home-search-bar > button:last-child { width: 86px; margin: 5px; border-radius: 5px; background: var(--home-accent); color: #0b2118; font-size: 13px; font-weight: 650; }
+.home-search-bar > button:last-child:hover { background: #c0efde; }
+.home-page #searchInput { min-width: 0; border: 0; padding: 0 20px; background: transparent; font-size: 13px; }
+.home-page #searchInput::placeholder { color: #61746e; }
+.home-page #clearSearchInput { background: transparent; border: 0; }
+/* Search history is an overlay anchored to the complete search bar. */
+.home-page .home-search-wrap { position: relative; }
+.home-page #recentSearches {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    box-sizing: border-box;
+    z-index: 40;
+    margin: 0;
+    padding: 14px;
+    max-height: min(320px, 45vh);
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    border: 1px solid #2b3a36;
+    border-radius: 9px;
+    background: #101718;
+    box-shadow: 0 14px 30px #0006;
+    /* Matches the unchanged .card-hover h3 movie titles in styles.css. */
+    font-size: .95rem;
+    line-height: 1.3rem;
+}
+.home-page #recentSearches[hidden], .home-page #recentSearches:empty { display: none; }
+.home-page #recentSearches > div { gap: 12px; flex-wrap: wrap; }
+.home-page #recentSearches #clearHistoryBtn { margin-left: auto; font-size: inherit; line-height: inherit; }
+.home-page #recentSearches .search-tag {
+    max-width: 100%;
+    margin: 0;
+    border: 1px solid var(--home-line);
+    background: #101916;
+    color: #a6b9ae;
+    font-size: inherit;
+    line-height: inherit;
+    text-align: left;
+}
+.home-page #recentSearches .search-tag > span:first-child { min-width: 0; overflow-wrap: anywhere; }
+.home-page #recentSearches .search-tag > span:last-child { flex-shrink: 0; }
+/* End search history overlay. */
+
+.home-discover { margin: 13px 0 28px !important; }
+.home-discover-shell { max-width: none !important; padding: 0 !important; }
+.home-discovery-header { gap: 18px; margin-bottom: 19px !important; }
+.home-discovery-heading { gap: 16px; }
+.home-section-index { color: #738b80; font: 10px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 1.5px; }
+.home-discovery-heading h2 { font-size: 16px; font-weight: 650; margin: 0; letter-spacing: .8px; }
+.home-discovery-heading > div { border: 1px solid var(--home-line); background: #101917; padding: 3px; }
+.home-page #douban-movie-toggle, .home-page #douban-tv-toggle { font-size: 11px; padding: 5px 14px; transition: background .2s, color .2s; }
+.home-page #doubanArea button[class~="bg-pink-600"] { background: var(--home-accent); color: #11271c; }
+.home-page #douban-refresh { padding: 8px 12px; border: 1px solid #365044; background: #17241e !important; color: #b7d5c5 !important; border-radius: 7px; font-size: 11px; }
+.home-page #douban-refresh:hover { background: #21362b !important; }
+.home-page #douban-refresh svg { width: 13px; height: 13px; }
+.home-tags-viewport { scrollbar-width: thin; scrollbar-color: #34483d transparent; padding-bottom: 13px !important; border-bottom: 1px solid var(--home-line); }
+/* Center fitting tags; intrinsic row width keeps both overflow ends reachable. */
+.home-page #douban-tags { width: max-content; min-width: 100%; justify-content: center; gap: 7px; }
+.home-page #douban-tags > button { flex: none; padding: 7px 12px; margin-left: 0 !important; border: 1px solid #25342d; border-radius: 5px; background: #101813; color: #9aae9f; font-size: 11px; box-shadow: none; }
+.home-page #douban-tags > button:hover { border-color: #628b71; color: #def0e4; }
+.home-page #douban-tags > button[class~="bg-pink-600"] { background: #b0d9bf; border-color: #b0d9bf; color: #102018; }
+
+.orbit-scene {
+    --orbit-radius: 240px;
+    --orbit-diameter: calc(var(--orbit-radius) * 2);
+    --orbit-card-width: calc(var(--orbit-radius) * .4123447093);
+    --orbit-card-height: calc(var(--orbit-card-width) * 1.75);
+    --orbit-footer-height: calc(var(--orbit-card-width) * .25);
+    --orbit-face-offset: calc(var(--orbit-radius) * .003);
+    position: relative;
+    width: 100%;
+    height: clamp(560px, 55vw, 700px);
+    perspective: 1250px;
+    perspective-origin: 50% 50%;
+    overflow: hidden;
+    /* Only the interactive sphere captures vertical touch; the page outside it
+       keeps normal scrolling. Browser pan-y would cancel the new X-axis drag. */
+    touch-action: none;
+    cursor: grab;
+    outline: none;
+    isolation: isolate;
+    user-select: none;
+    -webkit-user-select: none;
+    -webkit-tap-highlight-color: transparent;
+}
+.orbit-scene:focus-visible { outline: 1px solid #6a9280; outline-offset: 3px; border-radius: 10px; }
+.orbit-scene.is-dragging { cursor: grabbing; }
+.orbit-scene::after {
+    content: "";
+    position: absolute;
+    width: min(53%, 480px);
+    height: 40px;
+    bottom: 24px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-radius: 50%;
+    background: radial-gradient(ellipse, #4d927622 0%, #1834280d 38%, transparent 70%);
+    pointer-events: none;
+    z-index: -1;
+}
+.orbit-scene-meta { position: absolute; inset: 21px 0 auto; display: flex; justify-content: space-between; color: #63796c; font: 9px/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 1.8px; pointer-events: none; }
+.orbit-scene-meta b { color: #b0cdbb; font-weight: 400; }
+.orbit-camera, .orbit-world, .orbit-sphere {
+    transform-style: preserve-3d;
+    -webkit-transform-style: preserve-3d;
+    /* Grouping effects belong only on flat leaf faces, not these 3D carriers. */
+    overflow: visible;
+    opacity: 1;
+    filter: none;
+    isolation: auto;
+    width: 0;
+    height: 0;
+}
+.orbit-camera { position: absolute; top: 50%; left: 50%; transform-origin: 0 0; }
+.orbit-world { position: relative; }
+.home-page #douban-results.orbit-sphere { position: absolute !important; inset: 0 auto auto 0; display: block !important; width: 0; height: 0; overflow: visible; }
+.orbit-wireframe { position: absolute; width: 0; height: 0; transform-style: preserve-3d; will-change: transform; pointer-events: none; }
+.orbit-great-circle { position: absolute; left: calc(var(--orbit-radius) * -1); top: calc(var(--orbit-radius) * -1); width: var(--orbit-diameter); height: var(--orbit-diameter); border: 1px solid rgba(128, 179, 147, .11); border-radius: 50%; transform: var(--orbit-circle-transform); }
+.home-page #douban-results > .orbit-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: var(--orbit-card-width);
+    height: var(--orbit-card-height);
+    margin: calc(var(--orbit-card-height) / -2) 0 0 calc(var(--orbit-card-width) / -2);
+    /* Direct inline translations keep cards upright without inherited matrices. */
+    transform: translate3d(0, 0, 0);
+    will-change: transform;
+    transform-style: preserve-3d;
+    overflow: visible !important;
+    background: transparent !important;
+    border: 0;
+    box-shadow: none !important;
+    transition: none !important;
+    outline: none;
+}
+.orbit-card-front {
+    box-sizing: border-box;
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    border-radius: 7px;
+    backface-visibility: hidden;
+    -webkit-backface-visibility: hidden;
+    border: 1px solid rgba(190, 218, 198, .24);
+    /* At 5% a diagnostic card can be narrower than two CSS pixels. Keep
+       border-box dimensions proportional instead of imposing a 2px floor. */
+    border-width: min(1px, calc(var(--orbit-card-width) * .25));
+    /* Only this flat content layer fades. Keep opacity off 3D carriers and
+       avoid time-based opacity transitions that lag behind spatial depth. */
+    will-change: opacity;
+}
+.orbit-card-front { transform: translateZ(var(--orbit-face-offset)); opacity: 1; background: #101612; box-shadow: 0 5px 18px #0007; transition: border-color .2s; }
+/* Native link/image dragging must not steal the sphere's pointer stream. */
+.orbit-card, .orbit-card * { -webkit-user-drag: none; }
+.orbit-card-front > div:first-child { flex: 1; min-height: 0; aspect-ratio: auto; }
+.orbit-card-front img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; -webkit-user-drag: none; }
+.orbit-card-front > div:nth-of-type(2) { flex: none; padding: 0 calc(var(--orbit-card-width) * .05); background: #101712; height: var(--orbit-footer-height); display: flex; align-items: center; }
+.orbit-card-front > div:nth-of-type(2) button { font-size: calc(var(--orbit-card-width) * .093); color: #e4ecdf; line-height: 1.3; }
+.orbit-card-front .text-xs { font-size: calc(var(--orbit-card-width) * .085); padding: calc(var(--orbit-card-width) * .03) calc(var(--orbit-card-width) * .05); }
+.orbit-card-front .bottom-2 { bottom: calc(var(--orbit-card-width) * .06); }
+.orbit-card-front .left-2 { left: calc(var(--orbit-card-width) * .04); }
+.orbit-card-front .right-2 { right: calc(var(--orbit-card-width) * .04); }
+.orbit-card-front img:hover { transform: none; }
+.orbit-card:hover .orbit-card-front, .orbit-card:focus-visible .orbit-card-front { border-color: #c2edcd; }
+.orbit-card-number { position: absolute; top: calc(var(--orbit-card-width) * .05); left: calc(var(--orbit-card-width) * .05); padding: calc(var(--orbit-card-width) * .03) calc(var(--orbit-card-width) * .04); border: 1px solid #edf2ee2b; border-radius: 3px; background: #0b110d8c; color: #ecf3e4; font: calc(var(--orbit-card-width) * .08)/1 ui-monospace, SFMono-Regular, Menlo, monospace; pointer-events: none; }
+.home-page #douban-results.orbit-sphere > :not(.orbit-card) { width: min(380px, calc(100vw - 60px)); position: absolute; left: 0; top: 0; transform: translate(-50%, -50%); }
+.home-page #douban-results.orbit-sphere > .absolute { display: none !important; }
+.orbit-scene[data-state="empty"] .orbit-wireframe { display: none; }
+.orbit-loading { position: absolute; bottom: 24px; left: 50%; transform: translateX(-50%); color: #b7d5bf; background: #142019; border: 1px solid #294334; border-radius: 999px; padding: 8px 14px; font-size: 11px; align-items: center; gap: 8px; pointer-events: none; }
+.orbit-loading:not([hidden]) { display: flex; }
+.orbit-loading > span { width: 5px; height: 5px; border-radius: 50%; background: var(--home-accent); }
+
+.orbit-toolbar { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; border-top: 1px solid var(--home-line); padding-top: 15px; }
+.orbit-toolbar > p, .orbit-toolbar-content > p { display: flex; align-items: center; color: #829a87; font-size: 11px; letter-spacing: .2px; }
+.orbit-gesture-icon { display: inline-block; font-size: 18px; margin-right: 9px; color: #c0d8c4; }
+/* Collapse the entire toolbar, including future functions, except its trigger. */
+.home-page #orbitToolbar { gap: 9px; }
+.home-page #orbitToolbar[data-collapsed="true"] > :not(#orbitToolbarToggle) { display: none !important; }
+.orbit-toolbar-content { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; flex: 1; min-width: 0; }
+.orbit-toolbar-content[hidden] { display: none; }
+.orbit-toolbar-content > p { min-height: 28px; }
+.orbit-toolbar-toggle { display: flex; align-items: center; justify-content: center; flex: none; width: 28px; height: 28px; padding: 0; margin: 0; border: 0; border-radius: 4px; background: transparent; font-family: inherit; font-size: 18px; line-height: 1; cursor: pointer; }
+.orbit-toolbar-toggle:hover { background: #213127; color: white; }
+.orbit-toolbar-toggle:focus-visible { outline: 1px solid var(--home-accent); outline-offset: 1px; }
+.orbit-control-stack { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+/* Homepage rows share the pause/continue row's intrinsic width, without range labels. */
+.home-page #doubanArea .orbit-control-stack { width: max-content; align-items: stretch; }
+.orbit-controls { display: flex; align-items: center; gap: 3px; border: 1px solid var(--home-line); border-radius: 7px; padding: 3px; background: #0c1510; }
+.orbit-control-label { padding: 0 7px; color: #829a87; font-size: 10px; white-space: nowrap; }
+.orbit-control-range { margin-left: auto; padding: 0 7px; color: #63796c; font: 9px/1 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: nowrap; }
+.orbit-controls button { display: flex; justify-content: center; align-items: center; min-width: 30px; height: 28px; padding: 0 8px; border-radius: 4px; color: #b7c9bb; font: 12px/1 ui-monospace, SFMono-Regular, Menlo, monospace; transition: background .15s; }
+.orbit-controls button:hover { background: #213127; color: white; }
+.orbit-controls button:focus-visible { outline: 1px solid var(--home-accent); outline-offset: 1px; }
+.orbit-controls button:disabled { opacity: .35; cursor: default; }
+.orbit-controls #orbitZoom, .orbit-controls #orbitCardScale, .orbit-controls #orbitSpeed { min-width: 49px; font-size: 10px; }
+/* Read-only percentages and one combined homepage reset. */
+.orbit-controls .orbit-value { display: flex; align-items: center; justify-content: center; height: 28px; padding: 0 8px; font: 10px/1 ui-monospace, SFMono-Regular, Menlo, monospace; color: #b7c9bb; }
+.orbit-controls #orbitReset { font-family: inherit; font-size: 11px; white-space: nowrap; }
+/* End combined homepage reset. */
+.orbit-controls #orbitPause { gap: 7px; font-family: inherit; font-size: 11px; }
+.orbit-control-divider { width: 1px; height: 12px; background: var(--home-line); margin: 0 5px; }
+.orbit-pause-icon { width: 8px; height: 10px; border-left: 2px solid currentColor; border-right: 2px solid currentColor; }
+[aria-pressed="true"] > .orbit-pause-icon { width: 0; height: 0; border: 5px solid transparent; border-left: 7px solid currentColor; border-right: 0; }
+
+.home-page #resultsArea { margin: 16px 0 60px; }
+.home-page #resultsArea > div { max-width: none; padding: 0; }
+.home-page #results .card-hover { border-color: #2b3b2c; background: #111b13; border-radius: 9px; box-shadow: 0 10px 22px #0003; }
+.home-page #results .card-hover:hover { border-color: #8aae87; }
+.home-page .footer { position: relative; margin-top: 28px; border-color: var(--home-line); background: transparent; padding: 25px 0; }
+.home-page .footer > div { max-width: 1480px; padding: 0 48px; }
+.home-page .footer p { color: #657b6c; font-size: 11px; }
+.home-page .footer .gradient-text { background: none; -webkit-text-fill-color: #9fbda8; }
+.home-page .footer a { color: #a0b9a7; font-size: 11px; }
+.home-page #historyPanel, .home-page #settingsPanel { background: #0e1812; border-color: #385240; box-shadow: 0 0 70px #0008; }
+.home-page #settingsPanel > .space-y-5 > div { border: 1px solid #273c2c; background: #142019; box-shadow: none; }
+.home-page #modal > div, .home-page #passwordModal > div { background: #111e16; border-color: #385240; border-radius: 13px; }
+.home-page #historyPanel .gradient-text, .home-page #settingsPanel .gradient-text, .home-page #modal .gradient-text, .home-page #passwordModal .gradient-text { background: none; color: #d4e9d9; -webkit-text-fill-color: #d4e9d9; }
+
+@media (max-width: 900px) {
+    .home-shell { padding: 22px 28px 0 !important; }
+    .home-topline { padding-right: 175px; }
+    .home-topline > p { display: none; }
+    .home-history-tool { top: 23px !important; right: 105px !important; }
+    .home-settings-tool { top: 23px !important; right: 28px !important; }
+    .home-section-index { display: none; }
+    .orbit-scene { height: 610px; }
+    .home-page .footer > div { padding: 0 28px; }
+}
+
+@media (max-width: 600px) {
+    .home-shell { padding: 18px 18px 0 !important; }
+    .home-topline { min-height: 44px; padding: 0 108px 17px 0; }
+    .home-topline h1 { font-size: 22px; }
+    .home-topline svg { width: 22px; height: 22px; }
+    .home-tool { top: 17px !important; }
+    .home-history-tool { right: 64px !important; }
+    .home-settings-tool { right: 18px !important; }
+    .home-tool button { width: 34px; padding: 0; justify-content: center; }
+    .home-tool span { display: none; }
+    .home-page #searchArea { padding: 16px 0 12px; }
+    .home-intro { margin-bottom: 20px; }
+    .home-eyebrow { font-size: 8px; letter-spacing: 2px; margin-bottom: 11px; }
+    .home-intro h2 { font-size: clamp(24px, 7.1vw, 34px); letter-spacing: -.6px; }
+    .home-intro-caption { font-size: 11px; margin-top: 8px; }
+    .home-search-bar { height: 47px !important; }
+    .home-search-bar > button:first-child { width: 55px; flex-shrink: 0; }
+    .home-search-bar > button:last-child { width: 62px; flex-shrink: 0; }
+    .home-page #searchInput { padding: 0 11px; font-size: 12px; }
+    .home-discover { margin-top: 12px !important; }
+    .home-discovery-header { gap: 8px; margin-bottom: 14px !important; }
+    .home-discovery-heading { gap: 10px; }
+    .home-discovery-heading h2 { font-size: 14px; white-space: nowrap; }
+    .home-page #douban-movie-toggle, .home-page #douban-tv-toggle { padding: 4px 10px; font-size: 10px; }
+    .home-page #douban-refresh { padding: 7px 9px; white-space: nowrap; }
+    .home-page #douban-tags > button { padding: 6px 10px; font-size: 10px; }
+    .orbit-scene { height: clamp(390px, 112vw, 500px); margin: 0 -6px; width: calc(100% + 12px); }
+    .orbit-scene-meta { top: 17px; font-size: 8px; letter-spacing: 1px; padding: 0 6px; }
+    .orbit-toolbar { gap: 8px; flex-wrap: wrap; padding-top: 11px; }
+    .orbit-toolbar > p, .orbit-toolbar-content > p { font-size: 10px; }
+    .orbit-toolbar-content { gap: 8px; flex-wrap: wrap; }
+    .orbit-toolbar-content > p { min-height: 25px; }
+    .orbit-toolbar-toggle { width: 28px; height: 25px; }
+    .orbit-desktop-hint { display: none; }
+    .orbit-control-stack { margin-left: auto; }
+    .orbit-controls button { min-width: 24px; height: 25px; padding: 0 6px; }
+    .orbit-controls #orbitZoom, .orbit-controls #orbitCardScale, .orbit-controls #orbitSpeed { min-width: 40px; }
+    .orbit-controls .orbit-value { height: 25px; padding: 0 6px; }
+    .home-page .footer > div { padding: 0 18px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .home-page *, .home-page *::before, .home-page *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
+}
