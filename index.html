@@ -16,24 +16,27 @@
     <script src="libs/tailwindcss.min.js"></script>
     <link rel="stylesheet" href="css/styles.css">
     <link rel="stylesheet" href="css/index.css">
+    <link rel="stylesheet" href="css/home-orbit.css?v=20261003-16">
 </head>
-<body class="page-bg text-white">
+<body class="page-bg text-white home-page">
     <!-- 将历史记录按钮移到左上角，并缩小尺寸 -->
-    <div class="fixed top-4 left-4 z-10">
+    <div class="fixed top-4 left-4 z-10 home-tool home-history-tool">
         <button onclick="toggleHistory(event)" class="bg-[#222] hover:bg-[#333] border border-[#333] hover:border-white rounded-lg px-3 py-1.5 transition-colors" aria-label="观看历史">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
             </svg>
+            <span>历史</span>
         </button>
     </div>
 
     <!-- 设置按钮保留在右上角，并缩小尺寸 -->
-    <div class="fixed top-4 right-4 z-10">
+    <div class="fixed top-4 right-4 z-10 home-tool home-settings-tool">
         <button onclick="toggleSettings(event)" class="bg-[#222] hover:bg-[#333] border border-[#333] hover:border-white rounded-lg px-3 py-1.5 transition-colors" aria-label="打开设置">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
             </svg>
+            <span>设置</span>
         </button>
     </div>
     
@@ -180,10 +183,10 @@
         </div>
     </div>
 
-    <div class="container mx-auto px-4 py-8 flex flex-col h-screen">
+    <div class="container mx-auto px-4 py-8 flex flex-col h-screen home-shell">
         <div class="flex-1 flex flex-col">
             <!-- 网站标志和口号 -->
-            <header class="text-center mb-2">
+            <header class="text-center mb-2 home-topline">
                 <div class="flex justify-center items-center mb-4">
                     <a href="#" onclick="resetToHome(); return false;" class="flex items-center">
                         <svg class="w-10 h-10 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -197,8 +200,8 @@
             
 
             <div id="searchArea" class="flex-1 flex flex-col items-center justify-center">
-                <div class="w-full max-w-2xl">
-                    <div class="flex items-stretch mb-3 h-14 shadow-lg rounded-lg overflow-hidden">
+                <div class="w-full max-w-2xl home-search-wrap">
+                    <div class="flex items-stretch mb-3 h-14 shadow-lg rounded-lg overflow-hidden home-search-bar">
                         <!-- 首页按钮 -->
                         <button onclick="resetToHome()" 
                                 class="w-20 sm:w-24 flex items-center justify-center bg-white text-black font-medium hover:bg-gray-200 transition-colors" 
@@ -212,6 +215,8 @@
                                placeholder="搜索你喜欢的视频..." 
                                autocomplete="off"
                                aria-label="视频搜索框"
+                               aria-controls="recentSearches"
+                               aria-expanded="false"
                                oninput="toggleClearButton()">
                         <!-- 清空按钮 -->
                         <button id="clearSearchInput" 
@@ -232,20 +237,21 @@
                     </div>
                     
                     <!-- 添加最近搜索记录部分 -->
-                    <div id="recentSearches" class="mt-4 flex flex-wrap gap-2" aria-label="最近搜索记录">
+                    <div id="recentSearches" class="flex flex-wrap gap-2 home-search-history" aria-label="最近搜索记录" hidden>
                         <!-- 这里会动态插入最近的搜索记录 -->
                     </div>
                 </div>
             </div>
             
             <!-- 豆瓣热门推荐区域: 默认隐藏，现在位于搜索区域下方，调整宽度 -->
-            <div id="doubanArea" class="w-full my-8 hidden">
-                <div class="mx-auto max-w-screen-xl px-2">
+            <div id="doubanArea" class="w-full my-8 hidden home-discover">
+                <div class="mx-auto max-w-screen-xl px-2 home-discover-shell">
                     <!-- 改进标题和标签区域布局 -->
                     <div class="mb-4">
                         <!-- 标题和刷新按钮一行 -->
-                        <div class="flex items-center justify-between mb-4">
-                            <div class="flex items-center">
+                        <div class="flex items-center justify-between mb-4 home-discovery-header">
+                            <div class="flex items-center home-discovery-heading">
+                                <span class="home-section-index" aria-hidden="true">01 / DISCOVER</span>
                                 <h2 class="text-xl font-bold text-white mr-4">豆瓣热门</h2>
                                 <!-- 添加电影/电视剧切换开关 -->
                                 <div class="flex items-center bg-[#222] rounded-full p-1">
@@ -261,13 +267,60 @@
                             </button>
                         </div>
                         <!-- 分类标签独立成行，添加滚动支持以适应移动设备 -->
-                        <div class="overflow-x-auto pb-2">
+                        <div class="overflow-x-auto pb-2 home-tags-viewport">
                             <div id="douban-tags" class="flex space-x-2 min-w-max"></div>
                         </div>
                     </div>
                     
                     <!-- 推荐内容 -->
-                    <div id="douban-results" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3"></div>
+                    <section id="recommendationOrbit" class="orbit-scene" tabindex="0" aria-label="影视推荐球体，任意方向拖动旋转，卡片始终朝上，双指缩放" aria-describedby="orbitHint">
+                        <div class="orbit-scene-meta" aria-hidden="true">
+                            <span>CURATED IN ORBIT</span>
+                            <span><b id="orbitCount">—</b> 部精选</span>
+                        </div>
+                        <div class="orbit-camera">
+                            <div class="orbit-world">
+                                <div class="orbit-wireframe" aria-hidden="true">
+                                    <i class="orbit-great-circle" style="--orbit-circle-transform: rotateY(0deg)"></i>
+                                    <i class="orbit-great-circle" style="--orbit-circle-transform: rotateY(90deg)"></i>
+                                    <i class="orbit-great-circle" style="--orbit-circle-transform: rotateX(90deg)"></i>
+                                </div>
+                                <div id="douban-results" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6 xl:grid-cols-8 gap-3"></div>
+                            </div>
+                        </div>
+                        <div class="orbit-loading" role="status" hidden><span></span>正在载入推荐</div>
+                    </section>
+                    <div class="orbit-toolbar" id="orbitToolbar" data-collapsed="true">
+                        <button type="button" id="orbitToolbarToggle" class="orbit-gesture-icon orbit-toolbar-toggle" aria-expanded="false" aria-controls="orbitToolbarContent" aria-label="展开球体提示和控制栏" title="展开球体提示和控制栏">→</button>
+                        <!-- Put future toolbar functions in this shared disclosure content. -->
+                        <div id="orbitToolbarContent" class="orbit-toolbar-content" hidden>
+                            <p id="orbitHint">任意方向拖动 · 卡片始终朝上 · 双指缩放<span class="orbit-desktop-hint"> · Ctrl + 滚轮缩放</span></p>
+                            <div class="orbit-control-stack">
+                                <div class="orbit-controls" role="group" aria-label="球体显示控制">
+                                    <span class="orbit-control-label">球体</span>
+                                    <button type="button" data-orbit-action="zoom-out" aria-label="缩小球体10%">−</button>
+                                    <span id="orbitZoom" class="orbit-value" aria-label="当前球体缩放" title="球体缩放50%–500%">200%</span>
+                                    <button type="button" data-orbit-action="zoom-in" aria-label="放大球体10%">+</button>
+                                    <span class="orbit-control-divider" aria-hidden="true"></span>
+                                    <button type="button" data-orbit-action="pause" id="orbitPause" aria-label="暂停自动旋转" aria-pressed="false"><span class="orbit-pause-icon" aria-hidden="true"></span><span class="orbit-pause-label">暂停</span></button>
+                                </div>
+                                <div class="orbit-controls orbit-card-controls" role="group" aria-label="封面尺寸控制">
+                                    <span class="orbit-control-label">封面</span>
+                                    <button type="button" data-orbit-action="card-size-out" aria-label="缩小封面10%">−</button>
+                                    <span id="orbitCardScale" class="orbit-value" aria-label="当前封面尺寸" title="封面尺寸50%–500%">70%</span>
+                                    <button type="button" data-orbit-action="card-size-in" aria-label="放大封面10%">+</button>
+                                    <span class="orbit-control-divider" aria-hidden="true"></span>
+                                    <button type="button" data-orbit-action="reset" id="orbitReset" aria-label="重置球体、封面和转速至默认值">重置</button>
+                                </div>
+                                <div class="orbit-controls orbit-speed-controls" role="group" aria-label="自动旋转转速控制">
+                                    <span class="orbit-control-label">转速</span>
+                                    <button type="button" data-orbit-action="speed-out" aria-label="降低自动转速10个百分点">−</button>
+                                    <span id="orbitSpeed" class="orbit-value" aria-label="当前自动旋转转速50%" title="自动转速0%–100%，50%为默认转速">50%</span>
+                                    <button type="button" data-orbit-action="speed-in" aria-label="提高自动转速10个百分点">+</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
             
@@ -412,5 +465,11 @@
 
     <!-- 添加弹窗和URL搜索参数处理脚本 -->
     <script src="js/index-page.js"></script>
+    <!-- 搜索历史仅在选择搜索框时展开，不参与搜索或记录存储。 -->
+    <script src="js/home-search-history.js?v=20261003-1"></script>
+    <!-- 首页展示交互；不参与搜索、接口或播放器业务。 -->
+    <script src="js/home-orbit.js?v=20261003-14"></script>
+    <!-- 整栏默认收起；只控制显示，不改变球体参数和旋转状态。 -->
+    <script src="js/home-orbit-toolbar.js?v=20261003-1"></script>
 </body>
 </html>

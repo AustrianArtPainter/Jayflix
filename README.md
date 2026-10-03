@@ -1,122 +1,52 @@
 # JAYFLIX
 
-<div align="center">
-  <img src="image/logo-jayflix.png" alt="JAYFLIX Logo" width="112">
-  <p>轻量级、多源在线视频搜索与播放前端</p>
-</div>
+<p align="center"><img src="image/logo-jayflix.png" alt="JAYFLIX Logo" width="112"></p>
 
-![JAYFLIX 界面预览](image/readme-preview.png)
+多源视频搜索与播放前端，采用原生 HTML、CSS、JavaScript。聚合兼容苹果 CMS V10 的第三方接口，不提供、不存储、不上传视频内容。
 
-## 项目简介
+## 功能
 
-JAYFLIX 聚合兼容苹果 CMS V10 格式的第三方视频接口，提供多源搜索、详情展示与 HLS 播放。项目不提供、不存储、不上传任何视频内容。
+- 多源并行搜索、自定义接口、豆瓣电影及电视剧推荐。
+- HLS 播放、选集、自动连播、播放进度恢复。
+- 观看与搜索历史、配置导入导出、可选访问与设置密码。
+- 首页球面布局按实际数量自适应，支持 **1–1322 张封面**；超出时仅展示返回顺序中的前 1322 张。
+- 任意方向拖动、惯性旋转、双指及 Ctrl + 滚轮缩放；卡片始终朝上，透明度随前后位置线性变化。
+- 球体与封面独立缩放 **50%–500%**；自动转速 **0%–100%**，默认 50%。控制栏默认收起，点击 → 展开；统一重置恢复当前端默认值。
 
-本项目由 [LibreSpark/LibreTV](https://github.com/LibreSpark/LibreTV) 衍生维护；其上游基于 [bestK/tv](https://github.com/bestK/tv) 重构。
-
-## 主要功能
-
-- 多数据源并行搜索与自定义接口
-- 豆瓣电影、电视剧推荐
-- HLS 播放、选集、自动连播与播放进度恢复
-- 观看历史、搜索历史及配置导入导出
-- 桌面端和移动端响应式界面
-- 可选的访问密码与设置密码
+| 默认比例 | 球体 | 封面 |
+| --- | --- | --- |
+| 移动端（视口宽度 ≤600px） | 150% | 150% |
+| 桌面端（视口宽度 >600px） | 200% | 70% |
 
 ## 本地运行
 
-要求 Node.js 18 或更高版本。
+Node.js 18 或更高版本：
 
 ```bash
-npm install
+npm ci
 npm start
 ```
 
-默认访问地址：`http://localhost:8080`
+访问 `http://localhost:8080`。开发模式：`npm run dev`。
 
-开发模式：
+可通过环境变量 `PORT`（默认 8080）、`PASSWORD`（访问密码）、`ADMINPASSWORD`（设置密码）配置服务；密码默认未设置。密码校验主要在浏览器端完成，不能替代平台级身份认证。不要将内置代理作为公共开放代理。
 
-```bash
-npm run dev
-```
+## Cloudflare Pages
 
-## 环境变量
+连接 GitHub 仓库，生产分支选择 `main`；构建命令留空，输出目录选择仓库根目录。`functions/` 提供视频及图片代理和环境变量注入，必须一起部署；访问与设置密码在平台环境变量中配置。
 
-| 变量 | 默认值 | 说明 |
-| --- | --- | --- |
-| `PORT` | `8080` | Node 服务端口 |
-| `PASSWORD` | 空 | 站点访问密码 |
-| `ADMINPASSWORD` | 空 | 设置面板密码；Netlify 当前仅注入 `PASSWORD` |
-| `CORS_ORIGIN` | `*` | Node 代理允许的来源 |
-| `REQUEST_TIMEOUT` | `5000` | Node 代理请求超时，单位为毫秒 |
-| `MAX_RETRIES` | `2` | Node 代理失败重试次数 |
-| `DEBUG` | `false` | 调试日志开关 |
+Git 集成会编译 Pages Functions；也可使用 Wrangler 部署。**不要仅通过控制台拖入静态 ZIP**，该方式不会编译 `functions/`。参见 [Cloudflare 官方说明](https://developers.cloudflare.com/pages/get-started/direct-upload/#functions)。
 
-可在项目根目录创建 `.env`：
+仓库同时保留 Vercel、Netlify、Render 和 Docker 的原有部署配置。
 
-```dotenv
-PORT=8080
-PASSWORD=replace_with_a_strong_password
-ADMINPASSWORD=replace_with_an_admin_password
-```
-
-## Docker
+## 测试
 
 ```bash
-PASSWORD='replace_with_a_strong_password' docker compose up -d --build
+node --test tests/*.test.mjs
 ```
 
-服务默认映射到 `http://localhost:8899`。请务必覆盖 Compose 文件中的默认密码。
+`/orbit-test.html` 提供无图片布局与交互测试；`?mode=current` 使用当前首页算法，`?mode=capacity` 提供 1322 个空框的手动压力测试。空框结果不代表加载真实封面后的性能保证。
 
-## 平台部署
+## 来源与许可
 
-仓库包含以下平台配置：
-
-| 平台 | 配置入口 |
-| --- | --- |
-| Vercel | `vercel.json`、`middleware.js`、`api/` |
-| Cloudflare Pages | `functions/` |
-| Netlify | `netlify.toml`、`netlify/` |
-| Render | `render.yaml`、`server.mjs` |
-| Docker | `Dockerfile`、`docker-compose.yml` |
-
-导入仓库后按平台配置部署，并在平台控制台设置 `PASSWORD`。本项目依赖服务端代理，不能仅使用普通静态文件服务器运行完整功能。
-
-## 自定义接口
-
-在设置面板中添加兼容苹果 CMS V10 的接口基础地址，例如：
-
-```text
-https://example.com/api.php/provide/vod
-```
-
-接口应支持：
-
-```text
-GET {base}?ac=videolist&wd={keyword}
-GET {base}?ac=videolist&ids={id}
-```
-
-## 播放器快捷键
-
-| 按键 | 功能 |
-| --- | --- |
-| `Space` | 播放或暂停 |
-| `←` / `→` | 快退或快进 5 秒 |
-| `↑` / `↓` | 调整音量 |
-| `Alt` + `←` / `→` | 上一集或下一集 |
-| `F` | 切换全屏 |
-
-## 技术栈
-
-HTML、CSS、JavaScript、Tailwind CSS、ArtPlayer、Hls.js、Express 5、Serverless Functions、localStorage。
-
-## 安全与使用说明
-
-- 建议仅限个人、非公开部署，并设置强密码。
-- 当前密码验证主要在浏览器端完成，不能替代平台级身份认证或网络访问控制。
-- 内置代理会访问用户配置的第三方地址，请勿将实例作为公共代理开放。
-- 使用者应自行确认第三方接口及内容符合所在地法律和授权要求。
-
-## 许可证
-
-本项目采用 [Apache License 2.0](LICENSE)。
+衍生自 [LibreSpark/LibreTV](https://github.com/LibreSpark/LibreTV)，上游基于 [bestK/tv](https://github.com/bestK/tv)。采用 [Apache License 2.0](LICENSE)。第三方接口与内容的可用性、授权由其提供方决定，使用者需自行确认。

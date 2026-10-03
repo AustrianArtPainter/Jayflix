@@ -1,0 +1,8 @@
+node_modules/
+exports/
+.DS_Store
+.env
+.env.*
+*.log
+.codex/
+.agents/
