@@ -10,20 +10,34 @@ const root = new URL('../', import.meta.url);
 const read = file => readFileSync(new URL(file, root), 'utf8');
 const release = JSON.parse(read('tests/fixtures/release-75d0364.json'));
 const toolbarUpdate = JSON.parse(read('tests/fixtures/toolbar-disclosure-update.json'));
+const preferencesUpdate = JSON.parse(read('tests/fixtures/orbit-preferences-update.json'));
 
-test('Approved release retains the toolbar update and only the explicitly requested shared-theme hooks', () => {
+test('Approved release retains only the requested toolbar, theme hooks and preference persistence changes', () => {
     assert.equal(release.revision, '75d0364');
     assert.equal(toolbarUpdate.baseRevision, release.revision);
     assert.deepEqual(Object.keys(toolbarUpdate.hashes).sort(), ['css/home-orbit.css', 'index.html', 'js/home-orbit-toolbar.js']);
+    assert.equal(preferencesUpdate.baseRevision, '4feb49e');
+    assert.deepEqual(Object.keys(preferencesUpdate.hashes).sort(), ['index.html', 'js/home-orbit.js', 'orbit-test.html']);
     const files = Object.keys(release.hashes);
     for (const required of ['AGENTS.md', 'index.html', 'css/home-orbit.css', 'js/home-orbit.js',
         'orbit-test.html', 'js/home-orbit-toolbar.js']) assert.ok(files.includes(required));
     for (const file of files) {
         const hash = createHash('sha256').update(withoutThemeHooks(file, read(file))).digest('hex');
-        assert.equal(hash, toolbarUpdate.hashes[file] || release.hashes[file], `Unexpected release change: ${file}`);
+        assert.equal(hash, preferencesUpdate.hashes[file] || toolbarUpdate.hashes[file] || release.hashes[file], `Unexpected release change: ${file}`);
     }
     assert.equal(existsSync(new URL('tests/home-orbit-rollback.test.mjs', root)), false,
         'The obsolete selective-rollback test must not enforce the rejected page state');
+});
+
+test('Preference persistence leaves every formula and the entire animation/render loop byte-for-byte unchanged', () => {
+    const code = read('js/home-orbit.js');
+    const sections = {
+        math: code.slice(0, code.indexOf('    function initializeOrbit()')),
+        render: code.slice(code.indexOf('        function paint()'), code.indexOf('        function updateControls()'))
+    };
+    for (const [name, source] of Object.entries(sections)) {
+        assert.equal(createHash('sha256').update(source).digest('hex'), preferencesUpdate.unchangedSections[name], name);
+    }
 });
 
 test('The complete three-line homepage intro is removed, not hidden, and the search form is its first content block', () => {

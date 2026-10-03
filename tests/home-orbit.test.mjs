@@ -324,7 +324,7 @@ test('Every original homepage DOM id, inline action and script dependency is pre
 
 test('One upright original face fades with depth; no mirror, hidden rear actions or duplicate content remain', () => {
     const css=readFileSync(path.join(root,'css/home-orbit.css'),'utf8');
-    assert.doesNotMatch(source,/\b(?:fetch|XMLHttpRequest|localStorage|sessionStorage)\s*[.(]/);
+    assert.doesNotMatch(source,/\b(?:fetch|XMLHttpRequest|sessionStorage)\s*[.(]/);
     assert.doesNotMatch(css,/orbit-card-back|orbit-back-content|scaleX\(-1\)|rotateY\(180deg\)|data-side/);
     assert.doesNotMatch(source,/cloneNode|syncReflection|dataset\.side|toggleAttribute\('inert'/);
     assert.match(source,/state\.faces\[index\]\.style\.opacity = String\(opacityFromDepth\(depth, state\.radius \* centerScale\)\)/);

@@ -35,6 +35,29 @@ test('Homepage colors and typography are extracted unchanged and reused, not rep
     assert.doesNotMatch(theme, /#00ccff|#ff3c78|#23ade5|#3b82f6|linear-gradient/);
 });
 
+test('Player root canvas uses the same background as its body without changing layout or other pages', () => {
+    const rule = theme.match(/html:has\(> body\.jayflix-ui\.player-page\)\s*\{([^}]+)\}/);
+    assert.ok(rule, 'Transparent content below the viewport must not reveal the legacy html color');
+    assert.match(rule[1], /^\s*background: var\(--home-ink\);\s*$/);
+    const body = theme.match(/body\.jayflix-ui\s*\{([^}]+)\}/)[1];
+    assert.match(body, /background: var\(--home-ink\);/);
+    assert.doesNotMatch(theme, /(?:^|\n)html\s*\{/);
+});
+
+test('Background fix leaves all approved button, selected episode and footer colors byte-for-byte unchanged', () => {
+    const patch = `/* The legacy player fixes html/body to one viewport. Overflowing transparent
+   content therefore exposes the root canvas; match it without changing layout. */
+html:has(> body.jayflix-ui.player-page) {
+    background: var(--home-ink);
+}
+
+`;
+    assert.ok(theme.includes(patch));
+    const hash = text => createHash('sha256').update(text).digest('hex');
+    assert.equal(hash(theme.replace(patch, '')), '8b97a7c5acc89422261680bf67ea97c0ef2a31ee2ae27ee57fa727b3cd8c4d5a');
+    assert.equal(hash(tokens), 'ce6154fbc5b78f38575ba5e1973bf46786feacf11f98050c7fc452769a3e5f03');
+});
+
 test('All nine static/dynamic modal and drawer families plus shared states have theme coverage', () => {
     for (const id of ['historyPanel', 'settingsPanel', 'modal', 'passwordModal', 'tagManageModal',
         'showImportBoxModal', 'importUrlModal', 'messageBoxModal', 'loading', 'toast']) assert.ok(theme.includes('#' + id), id);
