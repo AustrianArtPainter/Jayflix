@@ -214,7 +214,8 @@ test('Played, buffered, hover and history progress colours all follow the accent
     assert.match(css, /\.art-progress-played \{ background: var\(--home-accent\) !important;/);
     assert.match(css, /--art-loaded-color: var\(--palette-accent-loaded\)/);
     assert.match(css, /--art-highlight-color: var\(--palette-accent-loaded\)/);
-    assert.match(css, /--art-font-color: var\(--home-white\)/);
+    assert.doesNotMatch(css, /--art-font-color:\s*var\(/);
+    assert.match(read('css/ui-theme.css'), /--art-font-color: #fff !important/);
     const first = api.buildVariables({ accent: '#e6a95c' }), second = api.buildVariables({ accent: '#5c9ee6' });
     for (const name of ['--home-accent', '--palette-accent-track', '--palette-accent-loaded', '--palette-accent-hover']) assert.notEqual(first[name], second[name]);
 });
@@ -245,7 +246,7 @@ test('New palette hooks strip precisely while original source files and business
     }
     const hashes = {
         'css/home-orbit.css': '125d14cdd6042764fd3ea5e231d802c195be91bd8702b0d6ea49774bd07c2e3f',
-        'css/ui-theme.css': '492eb877d8a4029a4313bec0367c56a11bff90b409fc661736b53ca92434254d',
+        'css/ui-theme.css': '81cac2994b942b0b9a6848276614170d0638700f032be84686bc5d6f5928f43e',
         'css/ui-tokens.css': 'ce6154fbc5b78f38575ba5e1973bf46786feacf11f98050c7fc452769a3e5f03',
         'js/home-orbit.js': '50194ceb8b526325918af1acff9e2dc06d4e0084a826e0dad14ea14394ec6d4f',
     };
@@ -253,6 +254,7 @@ test('New palette hooks strip precisely while original source files and business
 });
 
 test('README describes four-group, local-only theme settings and includes progress colour coverage', () => {
-    assert.match(read('README.md'), /背景、模块、强调、文字四组调色，进度条随强调色联动/);
+    assert.match(read('README.md'), /背景、模块、强调、文字四组调色/);
+    assert.match(read('README.md'), /播放器操作区固定白色图标／文字与深色背景，不参与调色，进度条仍随强调色联动/);
     assert.match(read('README.md'), /全站共用、浏览器本地保存，支持恢复默认/);
 });

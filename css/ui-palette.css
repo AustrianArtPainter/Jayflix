@@ -99,13 +99,10 @@ html[data-ui-palette] .jayflix-ui #settingsPanel input:is(:focus-visible, :hover
 html[data-ui-palette] .jayflix-ui :is(.player-loading-overlay, .loading-container, .error-container) { background: var(--palette-player-overlay) !important; }
 html[data-ui-palette] .jayflix-ui :is(.player-loading-spinner, .loading-spinner, #loading .animate-spin, .loading-animation) { border-color: var(--palette-accent-track) !important; border-top-color: var(--home-accent) !important; }
 html[data-ui-palette] .jayflix-ui .art-video-player {
-    --art-font-color: var(--home-white);
     --art-progress-color: var(--palette-accent-track);
     --art-loaded-color: var(--palette-accent-loaded);
     --art-hover-color: var(--palette-accent-hover);
     --art-highlight-color: var(--palette-accent-loaded);
-    --art-scrollbar-background: var(--ui-control-border);
-    --art-scrollbar-background-hover: var(--ui-focus);
 }
 html[data-ui-palette] .jayflix-ui .art-progress-played { background: var(--home-accent) !important; }
 html[data-ui-palette] .jayflix-ui .art-progress-loaded { background: var(--palette-accent-loaded) !important; }
