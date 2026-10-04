@@ -54,7 +54,7 @@ html:has(> body.jayflix-ui.player-page) {
 `;
     assert.ok(theme.includes(patch));
     const hash = text => createHash('sha256').update(text).digest('hex');
-    assert.equal(hash(theme.replace(patch, '')), '8b97a7c5acc89422261680bf67ea97c0ef2a31ee2ae27ee57fa727b3cd8c4d5a');
+    assert.equal(hash(theme.replace(patch, '')), '370e0dc0ed2f73c46d8449dc8a4f8065a69604ae5b4fbc4b1c157f7d59b51e46');
     assert.equal(hash(tokens), 'ce6154fbc5b78f38575ba5e1973bf46786feacf11f98050c7fc452769a3e5f03');
 });
 
@@ -100,8 +100,8 @@ test('Shared theme references defined tokens and retains semantic notification/w
     for (const selector of ['#toast.bg-red-500', '#toast.bg-yellow-500', '.speed-indicator:is(.poor, .error)', '.speed-indicator.medium']) assert.ok(theme.includes(selector));
     assert.match(theme, /outline: 2px solid var\(--ui-focus\)/);
     assert.match(theme, /\.form-checkbox:checked::after \{ border-color: var\(--ui-accent-ink\)/);
-    assert.match(theme, /\.art-video-player\.art-backdrop[\s\S]*background: var\(--ui-dialog\) !important/);
-    assert.match(theme, /--art-widget-background: var\(--ui-dialog\)/);
+    assert.match(theme, /\.art-video-player\.art-backdrop[\s\S]*background: rgba\(0, 0, 0, \.85\) !important/);
+    assert.match(theme, /--art-widget-background: rgba\(0, 0, 0, \.85\)/);
     // Basic delimiter validation complements computed-style checks in Chrome.
     for (const source of [tokens, theme]) {
         const css = source.replace(/\/\*[\s\S]*?\*\//g, '');
