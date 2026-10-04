@@ -223,25 +223,38 @@ html:has(> body.jayflix-ui.player-page) {
 .jayflix-ui :is(.position-restore-hint, .shortcut-hint) { background: var(--ui-dialog); color: var(--ui-title); border: 1px solid var(--ui-border); border-radius: var(--ui-button-radius); }
 .jayflix-ui .art-video-player {
     --art-theme: var(--home-accent) !important;
+    --art-font-color: #fff !important;
+    --art-background-color: #000;
     --art-font-family: var(--ui-font);
     --art-progress-color: #a2e2ce25;
     --art-loaded-color: #a2e2ce40;
     --art-hover-color: #a2e2ce20;
-    --art-widget-background: var(--ui-dialog);
-    --art-tip-background: var(--ui-dialog);
+    --art-widget-background: rgba(0, 0, 0, .85);
+    --art-tip-background: rgba(0, 0, 0, .7);
+    --art-scrollbar-background: rgba(255, 255, 255, .25);
+    --art-scrollbar-background-hover: rgba(255, 255, 255, .5);
     --art-border-radius: var(--ui-button-radius);
+    color: #fff;
+}
+/* Playback progress keeps the accent; controls and menus never use palette colours. */
+.jayflix-ui .art-video-player :is(.art-controls, .art-settings, .art-selector-list, .art-contextmenus, .art-info, .art-notice-inner) {
+    --art-theme: #fff !important;
+    color: #fff;
+    accent-color: #fff;
 }
 .jayflix-ui .art-video-player :is(.art-settings, .art-selector-list, .art-contextmenus, .art-volume-inner, .art-info, .art-notice-inner) {
-    background: var(--ui-dialog);
-    color: var(--home-white);
-    border-color: var(--ui-border);
+    background: rgba(0, 0, 0, .85) !important;
+    color: #fff;
+    border-color: rgba(255, 255, 255, .25);
     border-radius: var(--ui-button-radius);
 }
 .jayflix-ui .art-video-player.art-backdrop :is(.art-settings, .art-selector-list, .art-contextmenus, .art-volume-inner, .art-info, .art-layer-auto-playback) {
-    background: var(--ui-dialog) !important;
+    background: rgba(0, 0, 0, .85) !important;
     backdrop-filter: none;
 }
-.jayflix-ui .art-video-player :is(.art-setting-item, .art-selector-item, .art-contextmenu):hover { background: var(--ui-hover); }
+.jayflix-ui .art-video-player :is(.art-volume-loaded, .art-volume-indicator) { background-color: #fff !important; }
+.jayflix-ui .art-video-player :is(.art-setting-item, .art-selector-item, .art-contextmenu):hover { background: rgba(255, 255, 255, .1); }
+.jayflix-ui .art-video-player :is(.art-controls, .art-settings, .art-selector-list, .art-contextmenus) :focus-visible { outline-color: #fff; }
 .jayflix-ui #modal .speed-badge { background: var(--ui-input); border-radius: 5px; }
 .jayflix-ui #modal .speed-indicator { font-size: 10px; color: var(--home-accent); }
 .jayflix-ui #modal .speed-indicator:is(.poor, .error) { color: var(--ui-danger); }
