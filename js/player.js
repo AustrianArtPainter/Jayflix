@@ -117,35 +117,84 @@ function configureInlineVideo(video) {
     }
 }
 
-function toggleIOSNativeFullscreen(video = art && art.video) {
-    if (!video) return false;
+const iosFullscreenRequests = new WeakMap();
 
-    const isNativeFullscreen = video.webkitDisplayingFullscreen
-        || video.webkitPresentationMode === 'fullscreen';
-    const method = isNativeFullscreen
+function isIOSNativeFullscreen(video) {
+    return !!(video && (video.webkitDisplayingFullscreen
+        || video.webkitPresentationMode === 'fullscreen'));
+}
+
+function toggleIOSNativeFullscreen(video = art && art.video, player = art) {
+    if (!video) return false;
+    // 系统切换尚未完成时，不发起第二次请求，避免进出全屏相互冲突。
+    if (iosFullscreenRequests.has(video)) return false;
+
+    const exiting = isIOSNativeFullscreen(video);
+    const mode = exiting ? 'inline' : 'fullscreen';
+    const legacyMethod = exiting
         ? (video.webkitExitFullscreen || video.webkitExitFullScreen)
         : (video.webkitEnterFullscreen || video.webkitEnterFullScreen);
+    const expected = !exiting;
+    const events = ['webkitbeginfullscreen', 'webkitendfullscreen', 'webkitpresentationmodechanged'];
+    let timer;
 
-    if (typeof method !== 'function') return false;
+    function finish(success) {
+        clearTimeout(timer);
+        events.forEach(name => video.removeEventListener(name, onChange));
+        iosFullscreenRequests.delete(video);
+        if (!success && player && !player.isDestroy && player.video === video && player.notice) {
+            player.notice.show = exiting
+                ? '未能退出系统全屏，请使用 iOS 播放器的退出按钮'
+                : '未能进入 iOS 系统全屏，请再次点击全屏按钮';
+        }
+    }
+
+    function onChange(event) {
+        const reached = isIOSNativeFullscreen(video) === expected
+            || (expected && event.type === 'webkitbeginfullscreen')
+            || (!expected && event.type === 'webkitendfullscreen');
+        if (reached) finish(true);
+    }
+
+    iosFullscreenRequests.set(video, finish);
+    events.forEach(name => video.addEventListener(name, onChange));
+    timer = setTimeout(() => finish(isIOSNativeFullscreen(video) === expected), 2500);
 
     try {
-        method.call(video);
+        // 同步在点击手势中调用系统视频模式，不能先 await，也不全屏 ArtPlayer 容器。
+        const supportsMode = typeof video.webkitSetPresentationMode === 'function'
+            && (typeof video.webkitSupportsPresentationMode !== 'function'
+                || video.webkitSupportsPresentationMode(mode));
+        if (supportsMode) {
+            try {
+                video.webkitSetPresentationMode(mode);
+            } catch (error) {
+                if (typeof legacyMethod !== 'function') throw error;
+                legacyMethod.call(video);
+            }
+        } else if (typeof legacyMethod === 'function') {
+            legacyMethod.call(video);
+        } else {
+            finish(false);
+            return false;
+        }
+        if (isIOSNativeFullscreen(video) === expected) finish(true);
+        // true 仅表示已发出请求；实际结果由系统状态/事件确认，静默失败会提示。
         return true;
-    } catch (e) {
+    } catch (error) {
+        finish(false);
         return false;
     }
 }
 
-function togglePreferredFullscreen() {
-    if (!art) return;
+function togglePreferredFullscreen(player = art) {
+    if (!player) return;
 
-    // iOS 使用 Safari 原生视频全屏，与 YouTube 移动网页的全屏路径一致。
+    // iPhone/iPad 必须进入系统视频播放器，不可替换成网页或容器全屏。
     if (isIOS) {
-        if (!toggleIOSNativeFullscreen()) {
-            art.fullscreenWeb = !art.fullscreenWeb;
-        }
+        toggleIOSNativeFullscreen(player.video, player);
     } else {
-        art.fullscreen = !art.fullscreen;
+        player.fullscreen = !player.fullscreen;
     }
 }
 
@@ -160,9 +209,7 @@ function installIOSNativeFullscreenControl(player) {
             tooltip: player.i18n.get('Fullscreen'),
             html: player.icons.fullscreenOn,
             click: function () {
-                if (!toggleIOSNativeFullscreen(player.video)) {
-                    player.fullscreenWeb = !player.fullscreenWeb;
-                }
+                togglePreferredFullscreen(player);
             },
         });
     } catch (error) {
