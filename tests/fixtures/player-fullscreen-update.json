@@ -1,0 +1,10 @@
+{
+  "baseRevision": "73561ba",
+  "assetVersion": "20261009-2",
+  "hashes": {
+    "js/player.js": "2cf09ee40823829448f7c5398f1cb926e9dcfced6c09588e226e4523dd525002",
+    "player.html": "f7ad60086a5d0ac2c67147746b328724ee98bc0f52c88d46223b2dd2317ad2da"
+  },
+  "unchangedPlayback": "b9a89c408c4e3ca95115731fd12cf91cccb8510eb78daeac036b8b79671ba641",
+  "originalPlayerHtml": "f26590e851d3e11520918109fd818460e0ce40bf72e6025317a1d3cd4d024fbd"
+}

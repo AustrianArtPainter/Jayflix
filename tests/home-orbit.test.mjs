@@ -14,6 +14,7 @@ const scope = vm.createContext({});
 vm.runInContext(source, scope, { filename: 'home-orbit.js' });
 const math = scope.JayflixOrbitMath;
 const contract = JSON.parse(readFileSync(new URL('./fixtures/home-contract.json', import.meta.url), 'utf8'));
+const fullscreenUpdate = JSON.parse(readFileSync(new URL('./fixtures/player-fullscreen-update.json', import.meta.url), 'utf8'));
 const near = (a, b, epsilon = 1e-9) => assert.ok(Math.abs(a - b) < epsilon, a + ' != ' + b);
 const dot = (a, b) => a.reduce((sum, v, i) => sum + v * b[i], 0);
 const cross = (a, b) => [a[1]*b[2]-a[2]*b[1], a[2]*b[0]-a[0]*b[2], a[0]*b[1]-a[1]*b[0]];
@@ -309,8 +310,9 @@ test('3D carriers preserve depth and the decorative wireframe no longer represen
     assert.doesNotMatch(source,/zIndex\s*=|(?:card|world|camera)\.style\.opacity\s*=/);
 });
 
-test('All existing interfaces, business scripts, shared styles and page content remain unchanged after stripping theme hooks', () => {
-    for(const [file,expected] of Object.entries(contract.hashes))assert.equal(createHash('sha256').update(withoutThemeHooks(file, readFileSync(path.join(root,file), 'utf8'))).digest('hex'),expected,'Protected file changed: '+file);
+test('Protected interfaces and presentation remain unchanged except the separately verified player fullscreen fix', () => {
+    assert.deepEqual(Object.keys(fullscreenUpdate.hashes), ['js/player.js', 'player.html']);
+    for(const [file,expected] of Object.entries(contract.hashes))assert.equal(createHash('sha256').update(withoutThemeHooks(file, readFileSync(path.join(root,file), 'utf8'))).digest('hex'),fullscreenUpdate.hashes[file] || expected,'Protected file changed: '+file);
 });
 
 test('Every original homepage DOM id, inline action and script dependency is preserved', () => {
