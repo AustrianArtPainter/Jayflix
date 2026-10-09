@@ -18,6 +18,12 @@
         input.addEventListener('focus', () => setOpen(true));
         // A click reopens the list after Escape, even when focus never moved.
         input.addEventListener('click', () => setOpen(true));
+        history.addEventListener('pointerdown', event => {
+            // Keep the input focused until the real click runs. Browsers that
+            // blur it without focusing the button otherwise hide the target
+            // between press and release. Do not search on press (scroll/cancel).
+            if (event.button === 0 && event.target.closest('button')) event.preventDefault();
+        });
         wrapper.addEventListener('focusout', event => {
             if (!wrapper.contains(event.relatedTarget)) setOpen(false);
         });
