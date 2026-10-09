@@ -84,7 +84,19 @@ function createHistoryHarness({ records = ['肖申克的救赎', '星际穿越']
         }
     });
     Object.assign(h, { input, wrapper, history, homeButton, searchButton, clearInput, outside,
-        mutate() { h.observers.mutation?.([{ target: history, type: 'childList' }]); }
+        mutate() { h.observers.mutation?.([{ target: history, type: 'childList' }]); },
+        // Unlike Element.click(), a real activation may blur the input before
+        // click. Some browsers do not focus buttons on pointer activation.
+        pointerClick(target, pointerType = 'mouse') {
+            const down = target.dispatch('pointerdown', { pointerType, pointerId: 1, button: 0 });
+            if (!down.defaultPrevented) {
+                const previous = h.document.activeElement;
+                h.document.activeElement = h.document;
+                previous?.dispatch('focusout', { relatedTarget: null });
+            }
+            target.dispatch('pointerup', { pointerType, pointerId: 1, button: 0 });
+            if (!history.hidden) target.click();
+        }
     });
     Object.defineProperties(h, {
         tags: { get: () => history.querySelectorAll('.search-tag') },
@@ -151,6 +163,42 @@ test('An original history tag searches exactly once, keeps its text and dismisse
     assertOpen(h, false);
 });
 
+test('Mouse, touch and pen history activation prevent premature input blur with no related focus target', () => {
+    for (const pointerType of ['mouse', 'touch', 'pen']) {
+        const h = createHistoryHarness(); h.input.focus();
+        h.pointerClick(h.tags[0].children[0], pointerType);
+        assert.deepEqual(Array.from(h.document.business.searches), ['肖申克的救赎'], pointerType);
+        assertOpen(h, false);
+    }
+});
+
+test('Single deletion and clearing still activate when the pointer does not focus a button', () => {
+    const h = createHistoryHarness(); h.input.focus();
+    h.pointerClick(h.tags[0].children[1], 'touch'); h.mutate();
+    assertOpen(h, true);
+    assert.deepEqual(Array.from(h.document.business.getSearchHistory(), item => item.text), ['星际穿越']);
+    assert.equal(h.document.business.searches.length, 0);
+    h.input.focus(); h.pointerClick(h.clearHistory); h.mutate();
+    assertOpen(h, false);
+    assert.equal(h.document.business.storage.has('test-history'), false);
+});
+
+test('Preventing pointer focus does not search on press, cancellation or scrolling, or intercept other buttons', () => {
+    const h = createHistoryHarness(); h.input.focus();
+    const text = h.tags[0].children[0];
+    const down = text.dispatch('pointerdown', { pointerType: 'touch', button: 0 });
+    assert.equal(down.defaultPrevented, true);
+    assertOpen(h, true);
+    assert.equal(h.document.activeElement, h.input);
+    text.dispatch('pointermove'); text.dispatch('pointercancel');
+    assert.equal(h.document.business.searches.length, 0);
+    assertOpen(h, true);
+    for (const target of [h.homeButton, h.searchButton, h.history, h.outside]) {
+        assert.equal(target.dispatch('pointerdown', { button: 0 }).defaultPrevented, false);
+    }
+    assert.equal(text.dispatch('pointerdown', { button: 2 }).defaultPrevented, false);
+});
+
 test('Original single deletion does not search or dismiss the remaining records; clearing closes an empty list', () => {
     const h = createHistoryHarness(); h.input.focus();
     h.tags[0].children[1].click(); h.mutate();
@@ -205,7 +253,7 @@ test('Popup is hidden in HTML, spans the full responsive search bar, overlays wi
     assert.match(html, /id="recentSearches"[^>]*\bhidden>/);
     assert.match(html, /aria-controls="recentSearches"\s+aria-expanded="false"/);
     assert.match(html, /class="w-full max-w-2xl home-search-wrap">\s*<div[^>]*home-search-bar/);
-    assert.match(html, /js\/home-search-history\.js\?v=20261003-1/);
+    assert.match(html, /js\/home-search-history\.js\?v=20261009-1/);
     assert.doesNotMatch(read('orbit-test.html'), /home-search-history\.js/);
     assert.match(css, /\.home-page \.home-search-wrap \{ position: relative; \}/);
     const popup = css.match(/\.home-page #recentSearches \{([^}]+)\}/)[1];
