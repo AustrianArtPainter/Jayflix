@@ -11,19 +11,28 @@ const read = file => readFileSync(new URL(file, root), 'utf8');
 const release = JSON.parse(read('tests/fixtures/release-75d0364.json'));
 const toolbarUpdate = JSON.parse(read('tests/fixtures/toolbar-disclosure-update.json'));
 const preferencesUpdate = JSON.parse(read('tests/fixtures/orbit-preferences-update.json'));
+const historyUpdate = JSON.parse(read('tests/fixtures/search-history-activation-update.json'));
 
-test('Approved release retains only the requested toolbar, theme hooks and preference persistence changes', () => {
+test('Approved release retains only the requested toolbar, theme, preferences and history activation changes', () => {
     assert.equal(release.revision, '75d0364');
     assert.equal(toolbarUpdate.baseRevision, release.revision);
     assert.deepEqual(Object.keys(toolbarUpdate.hashes).sort(), ['css/home-orbit.css', 'index.html', 'js/home-orbit-toolbar.js']);
     assert.equal(preferencesUpdate.baseRevision, '4feb49e');
     assert.deepEqual(Object.keys(preferencesUpdate.hashes).sort(), ['index.html', 'js/home-orbit.js', 'orbit-test.html']);
+    assert.equal(historyUpdate.baseRevision, '8c656f0');
+    assert.equal(historyUpdate.assetVersion, '20261009-1');
+    assert.deepEqual(Object.keys(historyUpdate.hashes), ['js/home-search-history.js']);
     const files = Object.keys(release.hashes);
     for (const required of ['AGENTS.md', 'index.html', 'css/home-orbit.css', 'js/home-orbit.js',
         'orbit-test.html', 'js/home-orbit-toolbar.js']) assert.ok(files.includes(required));
     for (const file of files) {
-        const hash = createHash('sha256').update(withoutThemeHooks(file, read(file))).digest('hex');
-        assert.equal(hash, preferencesUpdate.hashes[file] || toolbarUpdate.hashes[file] || release.hashes[file], `Unexpected release change: ${file}`);
+        let content = withoutThemeHooks(file, read(file));
+        // The only additional HTML change is cache-busting the fixed history
+        // controller. Keep the rest of the original release contract intact.
+        if (file === 'index.html') content = content.replace(
+            `js/home-search-history.js?v=${historyUpdate.assetVersion}`, 'js/home-search-history.js?v=20261003-1');
+        const hash = createHash('sha256').update(content).digest('hex');
+        assert.equal(hash, historyUpdate.hashes[file] || preferencesUpdate.hashes[file] || toolbarUpdate.hashes[file] || release.hashes[file], `Unexpected release change: ${file}`);
     }
     assert.equal(existsSync(new URL('tests/home-orbit-rollback.test.mjs', root)), false,
         'The obsolete selective-rollback test must not enforce the rejected page state');
